@@ -24,7 +24,7 @@ class SpriteGenerator
 public:
 	SpriteGenerator(const sf::Texture& spriteSheet, sf::Vector2u spriteNumber, sf::Vector2u spriteSize);
 
-	sf::Sprite get(size_t spriteNumber) const;
+	sf::Sprite get(int spriteNumber) const;
 
 	void set(const sf::Texture& spriteSheet, sf::Vector2u spriteNumber, sf::Vector2u spriteSize);
 

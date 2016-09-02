@@ -19,7 +19,7 @@ namespace mul { namespace sfe
 SpriteGenerator::SpriteGenerator(const sf::Texture& spriteSheet, sf::Vector2u spriteNumber, sf::Vector2u spriteSize) :
 	m_spriteSheet(&spriteSheet), m_spriteNumber(spriteNumber), m_spriteSize(spriteSize) {}
 
-sf::Sprite SpriteGenerator::get(size_t spriteNumber) const
+sf::Sprite SpriteGenerator::get(int spriteNumber) const
 {
 	int top  = spriteNumber / m_spriteNumber.x * m_spriteSize.y;
 	int left = spriteNumber % m_spriteNumber.x * m_spriteSize.x;

@@ -47,9 +47,11 @@ class TileMap : public sf::Drawable
 {
 public:
 
-	TileMap();
+	TileMap(int tileSize);
 
-	void addTileset(int id, sf::Texture& tileset);
+	void addTileset(int id, const sf::Texture& tileset);
+
+	void addAutotileset(int id, const sf::Texture& tileset);
 
 	void loadFromMapData(MapData& map);
 
@@ -59,8 +61,9 @@ protected:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	struct
+	struct MapInfo
 	{
+		MapInfo(int size) : tileSize(size) {}
 		struct TileMapLayer
 		{
 			std::vector<sf::Sprite> tiles;
@@ -68,12 +71,19 @@ protected:
 
 		std::string name;
 		sf::Vector2i size;
-		int tileSize;
+		const int tileSize;
 		std::vector<TileMapLayer> layers;
+	};
 
-	} m_map;
+	struct TilesetInfo
+	{
+		std::shared_ptr<const sf::Texture> tileset;
+		bool isAutotile;
+	};
 
-	std::map<int,std::shared_ptr<sf::Texture>> m_tilesets;
+	MapInfo m_map;
+
+	std::map<int,TilesetInfo> m_tilesets;
 
 	sf::Texture m_transparentTile;
 };

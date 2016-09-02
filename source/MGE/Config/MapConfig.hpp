@@ -21,6 +21,9 @@ namespace mge
 // If needed, replace with your custom map class
 using Map = mul::sfe::TileMap;
 
+// Replace with your tile size (tiles must be square)
+constexpr int TileSize = 32;
+
 } // namespace mge
 
 #endif // MAPCONFIG_HPP_
