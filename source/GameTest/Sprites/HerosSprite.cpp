@@ -2,15 +2,18 @@
 #include <MUL/SFE/SpriteGenerator.hpp>
 //#include <Engine/Graphics/Map/TileMapDrawer.hpp>
 
-rpg::HerosSprite::HerosSprite() :
+namespace game
+{
+
+HerosSprite::HerosSprite() :
 	mul::sfe::AnimatedSprite<std::string>(true,true),
-    mSpeed(DEFAULT_SPEED), mWalkSpeed(DEFAULT_SPEED), mRunFactor(DEFAULT_RUN_FACTOR),
-    mRunning(false), mAsMoved(false), mMovement(0.0f,0.0f)
+    m_speed(DEFAULT_SPEED), m_walkSpeed(DEFAULT_SPEED), m_runFactor(DEFAULT_RUN_FACTOR),
+    m_running(false), m_asMoved(false), m_movement(0.0f,0.0f)
 {
 
 }
 
-void rpg::HerosSprite::init(const sf::Texture& texture)
+void HerosSprite::init(const sf::Texture& texture)
 {
 	mul::sfe::SpriteGenerator sg(texture, {12,8}, {32,32});
 	mul::sfe::AnimatedSprite<std::string> as(true, true);
@@ -40,72 +43,74 @@ void rpg::HerosSprite::init(const sf::Texture& texture)
 	play(MoveDown);
 }
 
-void rpg::HerosSprite::animate(float elapsedTime)
+void HerosSprite::animate(float elapsedTime)
 {
     updateAnimation(elapsedTime);
 
     reInit();
 }
 
-void rpg::HerosSprite::run()
+void HerosSprite::run()
 {
-    mRunning = true;
-    mSpeed = mWalkSpeed*mRunFactor;
+    m_running = true;
+    m_speed = m_walkSpeed*m_runFactor;
 }
 
-void rpg::HerosSprite::walk()
+void HerosSprite::walk()
 {
-    mRunning = false;
-    mSpeed = mWalkSpeed;
+    m_running = false;
+    m_speed = m_walkSpeed;
 }
 
-void rpg::HerosSprite::moveRight()
+void HerosSprite::moveRight()
 {
     play(MoveRight);
-    mMovement.x += mSpeed;
-    mAsMoved = true;
+    m_movement.x += m_speed;
+    m_asMoved = true;
 }
 
-void rpg::HerosSprite::moveLeft()
+void HerosSprite::moveLeft()
 {
 	play(MoveLeft);
-    mMovement.x -= mSpeed;
-    mAsMoved = true;
+    m_movement.x -= m_speed;
+    m_asMoved = true;
 }
 
-void rpg::HerosSprite::moveUp()
+void HerosSprite::moveUp()
 {
 	play(MoveUp);
-    mMovement.y -= mSpeed;
-    mAsMoved = true;
+    m_movement.y -= m_speed;
+    m_asMoved = true;
 }
 
-void rpg::HerosSprite::moveDown()
+void HerosSprite::moveDown()
 {
 	play(MoveDown);
-    mMovement.y += mSpeed;
-    mAsMoved = true;
+    m_movement.y += m_speed;
+    m_asMoved = true;
 }
 
-void rpg::HerosSprite::updateAnimation(float elapsedTime)
+void HerosSprite::updateAnimation(float elapsedTime)
 {
-    if (not mAsMoved)
+    if (not m_asMoved)
         stop();
 
-    mAsMoved = false;
+    m_asMoved = false;
 
     //play(*mCurrentAnimation);
 
-    move(mMovement * elapsedTime);
+    move(m_movement * elapsedTime);
 
-    if(mRunning == true)
-        elapsedTime *= mRunFactor;
+    if(m_running == true)
+        elapsedTime *= m_runFactor;
 
     update(sf::seconds(elapsedTime));
 }
 
-void rpg::HerosSprite::reInit()
+void HerosSprite::reInit()
 {
-    mMovement.x = 0;
-    mMovement.y = 0;
+    m_movement.x = 0;
+    m_movement.y = 0;
 }
+
+} // namespace game

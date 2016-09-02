@@ -4,7 +4,7 @@
 #include <MUL/SFE/AnimatedSprite.hpp>
 #include <string>
 
-namespace rpg
+namespace game
 {
 
 class TileMapDrawer;
@@ -34,18 +34,18 @@ protected:
     static constexpr auto MoveLeft = "moveLeft";
     static constexpr auto MoveRight = "moveRight";
 
-    float mSpeed;
-    float mWalkSpeed;
-    float mRunFactor;
-    bool mRunning;
-    bool mAsMoved;
+    float m_speed;
+    float m_walkSpeed;
+    float m_runFactor;
+    bool m_running;
+    bool m_asMoved;
 
-    sf::Vector2f mMovement;
+    sf::Vector2f m_movement;
 
     void updateAnimation(float elapsedTime);
     void reInit();
 };
 
-}
+} // namespace game
 
 #endif // HEROSSPRITE_HPP_INCLUDED
