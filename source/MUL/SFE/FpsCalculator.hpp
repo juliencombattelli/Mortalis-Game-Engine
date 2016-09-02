@@ -47,7 +47,7 @@ public:
 		}
 
 		m_label.setString(std::to_string(m_lastValue));
-		m_label.setColor(sf::Color::White);
+		m_label.setFillColor(sf::Color::White);
 	}
 
 protected:
