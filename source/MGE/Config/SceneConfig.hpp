@@ -12,13 +12,15 @@
 #ifndef SCENECONFIG_HPP_
 #define SCENECONFIG_HPP_
 
-// Replace with your custom initial scene class
+// Replace this include with yours
 #include <MGE/Core/Scene/DummyScene.hpp>
+#include <GameTest/States/SceneMap.hpp>
 
 namespace mge
 {
 
-using InitialScene = DummyScene;
+// Replace with your custom initial scene class and include it
+using InitialScene = game::SceneMap;//DummyScene;
 
 } // namespace mge
 
