@@ -17,7 +17,7 @@
 #include <MGE/Resource/TemplateResource.hpp>
 #include <MGE/Config/MapConfig.hpp>
 
-#include <MUL/SFE/AnimatedSprite.hpp>
+#include <GameTest/Sprites/HerosSprite.hpp>
 
 namespace game
 {
@@ -43,7 +43,7 @@ private:
     mge::Map m_map;
     mge::TextureResource m_actor1Texture;
     mge::TextureResource m_worldA2Texture;
-    mul::sfe::AnimatedSprite<std::string> m_heros;
+    game::HerosSprite m_heros;
 };
 
 } // namespace game

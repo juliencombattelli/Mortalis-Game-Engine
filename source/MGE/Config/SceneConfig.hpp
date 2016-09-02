@@ -14,7 +14,7 @@
 
 // Replace this include with yours
 #include <MGE/Core/Scene/DummyScene.hpp>
-#include <GameTest/States/SceneMap.hpp>
+#include <GameTest/Scenes/SceneMap.hpp>
 
 namespace mge
 {

@@ -1,4 +1,4 @@
-#include <GameTest/States/Exploration.hpp>
+#include <GameTest/Scenes/Exploration.hpp>
 #include <MGE/Resource/ResourceManager.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
