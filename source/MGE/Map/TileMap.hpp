@@ -9,6 +9,15 @@
 // Description : 
 //============================================================================
 
+
+/*
+ * WARNING : Deprecated !!!
+ * Will be removed in a future release
+ *
+ * Use mul::sfe::TileMap instead
+ *
+ */
+
 #ifndef TILEMAP_HPP_
 #define TILEMAP_HPP_
 
@@ -27,7 +36,7 @@ class ResourceManager;
 struct MapLayer
 {
 	std::shared_ptr<sf::Texture> tileset;
-	std::vector<uint8_t> tiles;
+	std::vector<uint32_t> tiles;
 	sf::VertexArray vertices;
 };
 
@@ -40,6 +49,7 @@ struct TileMapData
 	MapLayer layer1;
 };
 
+template<class TMapData>
 class TileMap : public sf::Drawable, public sf::Transformable
 {
 public:
@@ -51,20 +61,23 @@ public:
 
     bool load(const std::string& mapName);
 
-    sf::Vector2u getSizePixel() const { return { m_data.size.x * m_data.tileSize.x, m_data.size.y * m_data.tileSize.y}; }
+    sf::Vector2u getSizePixel() const { return { m_data->size.x * m_data->tileSize.x, m_data->size.y * m_data->tileSize.y}; }
+
+    // set private ?
+    bool loadFromFile(const std::string& mapName);
+    bool loadFromMemory(TileMapData& data);
 
 private:
-
-    bool loadFromFile(const std::string& mapName);
-    bool loadFromMemory(const TileMapData& data);
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 
     ResourceManager& m_resourceManager;
 
-    TileMapData m_data;
+    TileMapData* m_data;
 };
 
 } // namespace mge
+
+#include <MGE/Map/TileMap.inl>
 
 #endif // TILEMAP_HPP_

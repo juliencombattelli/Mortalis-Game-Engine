@@ -8,7 +8,7 @@
 //               MIT license. See file LICENSE.txt for full license details
 // Description : 
 //============================================================================
-
+/*
 #include <MGE/Map/TileMap.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
@@ -57,7 +57,7 @@ bool TileMap::load(const std::string& mapName)
 }
 
 bool TileMap::loadFromFile(const std::string& mapName)
-{
+{*/
     /*utility::ibfstream file( mapFolder + mapName + mapExt );
 
     if(not file.isOpen())
@@ -90,7 +90,7 @@ bool TileMap::loadFromFile(const std::string& mapName)
 
     delete[] buffer;
 
-    file.close();*/
+    file.close();*//*
 
     return true;
 }
@@ -110,4 +110,4 @@ void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(m_data.layer1.vertices, states);
 }
 
-} // namespace mge
+} // namespace mge*/
