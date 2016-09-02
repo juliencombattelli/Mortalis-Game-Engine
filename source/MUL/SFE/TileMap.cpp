@@ -79,8 +79,10 @@ void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
 			target.draw(tile, states);
 }
 
+sf::Vector2f TileMap::getSize() const
+{
+	return {static_cast<float>(m_map.size.x)*32.f,static_cast<float>(m_map.size.y)*32.f};
+}
+
 } // namespace sfe
 } // namespace mul
-
-
-

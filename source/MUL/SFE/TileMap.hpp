@@ -46,6 +46,8 @@ public:
 
 	void loadFromMapData(MapData& map);
 
+	sf::Vector2f getSize() const;
+
 protected:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
