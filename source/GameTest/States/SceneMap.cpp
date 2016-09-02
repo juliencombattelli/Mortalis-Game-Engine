@@ -12,13 +12,14 @@
 #include <GameTest/States/SceneMap.hpp>
 #include <MGE/Resource/ResourceManager.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <GameTest/Maps/Maps.hpp>
 
 namespace game
 {
 
 SceneMap::SceneMap(mge::ResourceManager& resourceManager) :
-		m_Actor1Texture("Actor1.png", resourceManager),
-		mTileMap(resourceManager)
+		m_actor1Texture("resources/Actor1.png", resourceManager),
+		m_worldA2Texture("resources/World_A2.png", resourceManager)
 {
     /*if (!mTexture.loadFromFile(pictureFolder+"Heros1"+pictureExt))
     {
@@ -28,11 +29,13 @@ SceneMap::SceneMap(mge::ResourceManager& resourceManager) :
     //mTexture.loadFromImage(mApp->getResourceManager().getResource("Heros1"));
 
     //mView.setSize(mRenderManager.DEFAULT_VIDEO_WIDTH, mRenderManager.DEFAULT_VIDEO_HEIGHT);
-    mView.setCenter(mHeros.getPosition().x+16, mHeros.getPosition().y+16);
-    mView.setViewport(sf::FloatRect(0,0,1.0f, 1.0f));
+    m_view.setCenter(m_heros.getPosition().x+16, m_heros.getPosition().y+16);
+    m_view.setViewport(sf::FloatRect(0,0,1.0f, 1.0f));
 
-    //mTileMap.load("WorldMap");
-    //mHeros.init(m_Actor1Texture.getResource());
+    m_map.addTileset(1,m_worldA2Texture.getResource());
+    m_map.loadFromMapData(map0);
+
+    //m_heros.init(m_actor1Texture.getResource());
 }
 
 void SceneMap::handleEvent(sf::Event& event, const mge::Keyboard& keyboard)
@@ -60,10 +63,10 @@ void SceneMap::update(float elapsedTime)
 
 void SceneMap::draw(sf::RenderTarget& window)
 {
-	mView.setSize(window.getSize().x, window.getSize().y);
-    window.setView(mView);
-    //window.draw(mTileMap);
-    window.draw(mHeros);
+	m_view.setSize(static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y));
+    //window.setView(mView);
+    window.draw(m_map);
+    window.draw(m_heros);
 }
 
 void SceneMap::pause()

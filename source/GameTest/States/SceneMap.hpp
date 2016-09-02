@@ -15,7 +15,7 @@
 
 #include <MGE/Core/Scene/Scene.hpp>
 #include <MGE/Resource/TemplateResource.hpp>
-#include <MGE/Map/TileMap.hpp>
+#include <MGE/Config/MapConfig.hpp>
 
 #include <MUL/SFE/AnimatedSprite.hpp>
 
@@ -39,13 +39,11 @@ private:
 
     void updateView();
 
-    sf::Texture         mTexture;
-    sf::View            mView;
-    mge::TileMap        mTileMap;
-    //rpg::HerosSprite    mHeros;
-    mge::TextureResource m_Actor1Texture;
-    mul::sfe::AnimatedSprite<std::string> mHeros;
-
+    sf::View m_view;
+    mge::Map m_map;
+    mge::TextureResource m_actor1Texture;
+    mge::TextureResource m_worldA2Texture;
+    mul::sfe::AnimatedSprite<std::string> m_heros;
 };
 
 } // namespace game
