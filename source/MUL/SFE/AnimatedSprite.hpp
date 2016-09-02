@@ -54,7 +54,7 @@ public:
 
 	void play();
 
-	void play(const std::string& animation);
+	void play(const AnimationIDType& animation);
 
 	void pause();
 
@@ -150,7 +150,7 @@ void AnimatedSprite<AnimationIDType>::play()
 }
 
 template<class AnimationIDType>
-void AnimatedSprite<AnimationIDType>::play(const std::string& animation)
+void AnimatedSprite<AnimationIDType>::play(const AnimationIDType& animation)
 {
 	m_isPaused = false;
 	m_currentAnimation = animation;
