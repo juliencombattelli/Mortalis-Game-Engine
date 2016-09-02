@@ -33,9 +33,16 @@ struct MapData
 	std::string name;
 	int row;
 	int column;
+	int tileSize;
 	std::vector<int> tiles;
 };
 
+/*
+ * This TileMap class works very well with RPG Maker VXAce tilesets.
+ * For others, it might needs some adjustments.
+ *
+ * TODO add support for non-autotile tilesets;
+ */
 class TileMap : public sf::Drawable
 {
 public:
@@ -61,6 +68,7 @@ protected:
 
 		std::string name;
 		sf::Vector2i size;
+		int tileSize;
 		std::vector<TileMapLayer> layers;
 
 	} m_map;

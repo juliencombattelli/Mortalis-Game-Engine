@@ -16,9 +16,7 @@ namespace mul { namespace sfe
 
 TileMap::TileMap()
 {
-	sf::Image transparent;
-	transparent.create(32,32,sf::Color::Transparent);
-	m_transparentTile.loadFromImage(transparent);
+
 }
 
 void TileMap::addTileset(int id, sf::Texture& tileset)
@@ -31,6 +29,11 @@ void TileMap::loadFromMapData(MapData& map)
 	m_map.name = map.name;
 	m_map.size.x = map.column;
 	m_map.size.y = map.row;
+	m_map.tileSize = map.tileSize;
+
+	sf::Image transparent;
+	transparent.create(m_map.tileSize,m_map.tileSize,sf::Color::Transparent);
+	m_transparentTile.loadFromImage(transparent);
 
 	int layerCount = static_cast<int>(map.tiles.size() / (map.column*map.row));
 
@@ -49,7 +52,7 @@ void TileMap::loadFromMapData(MapData& map)
 				int autotile = (map.tiles[tileIndex] & 0x0FF00) >> 8;
 				int tileset = (map.tiles[tileIndex] & 0xF0000) >> 16;
 
-				sf::Vector2i topLeftCorner((autotile%8)*64,(autotile/8)*96);
+				sf::Vector2i topLeftCorner((autotile%8)*m_map.tileSize*2,(autotile/8)*m_map.tileSize*3);
 
 				mul::sfe::AutotilerVXAce a;
 
@@ -63,8 +66,8 @@ void TileMap::loadFromMapData(MapData& map)
 					{
 						m_map.layers[l].tiles.emplace_back(*m_tilesets[tileset], minitiles[i]);
 						m_map.layers[l].tiles.back().setPosition(
-								static_cast<float>(x*32+16*(i&0x1)),
-								static_cast<float>(y*32+16*((i>>1)&0x1)));
+								static_cast<float>(x*m_map.tileSize+(m_map.tileSize/2)*(i&0x1)),
+								static_cast<float>(y*m_map.tileSize+(m_map.tileSize/2)*((i>>1)&0x1)));
 					}
 				}
 			}
@@ -81,7 +84,7 @@ void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 sf::Vector2f TileMap::getSize() const
 {
-	return {static_cast<float>(m_map.size.x)*32.f,static_cast<float>(m_map.size.y)*32.f};
+	return {static_cast<float>(m_map.size.x*m_map.tileSize),static_cast<float>(m_map.size.y*m_map.tileSize)};
 }
 
 } // namespace sfe
