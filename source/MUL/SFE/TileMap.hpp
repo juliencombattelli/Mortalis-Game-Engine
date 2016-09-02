@@ -65,8 +65,6 @@ protected:
 
 	} m_map;
 
-	//TileMapData m_map;
-
 	std::map<int,std::shared_ptr<sf::Texture>> m_tilesets;
 
 	sf::Texture m_transparentTile;
