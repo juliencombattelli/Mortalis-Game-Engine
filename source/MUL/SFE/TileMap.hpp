@@ -64,6 +64,7 @@ protected:
 	struct MapInfo
 	{
 		MapInfo(int size) : tileSize(size) {}
+
 		struct TileMapLayer
 		{
 			std::vector<sf::Sprite> tiles;

@@ -55,27 +55,35 @@ void TileMap::loadFromMapData(MapData& map)
 			for(int y = 0 ; y < m_map.size.y ; y++)
 			{
 				int tileIndex = y*m_map.size.x + x + l*m_map.size.x*m_map.size.y;
-				int tile = map.tiles[tileIndex] & 0x000FF;
-				int autotile = (map.tiles[tileIndex] & 0x0FF00) >> 8;
 				int tileset = (map.tiles[tileIndex] & 0xF0000) >> 16;
 
-				sf::Vector2i topLeftCorner{(autotile%8)*m_map.tileSize*2,(autotile/8)*m_map.tileSize*3};
+				if(m_tilesets[tileset].isAutotile)
+				{
+					int tile = map.tiles[tileIndex] & 0x000FF;
+					int autotile = (map.tiles[tileIndex] & 0x0FF00) >> 8;
 
-				if(map.tiles[tileIndex] == 0xFFFFF)
-					m_map.layers[l].tiles.emplace_back(m_transparentTile);
+					sf::Vector2i topLeftCorner{(autotile%8)*m_map.tileSize*2,(autotile/8)*m_map.tileSize*3};
+
+					if(map.tiles[tileIndex] == 0xFFFFF)
+						m_map.layers[l].tiles.emplace_back(m_transparentTile);
+					else
+					{
+						mul::sfe::AutotilerVXAce a;
+
+						std::array<sf::IntRect,4> minitiles = a.generateTile(tile, topLeftCorner);
+
+						for(int i = 0 ; i < 4 ; i++)
+						{
+							m_map.layers[l].tiles.emplace_back(*m_tilesets[tileset].tileset, minitiles[i]);
+							m_map.layers[l].tiles.back().setPosition(
+									static_cast<float>(x*m_map.tileSize+(m_map.tileSize/2)*(i&0x1)),
+									static_cast<float>(y*m_map.tileSize+(m_map.tileSize/2)*((i>>1)&0x1)));
+						}
+					}
+				}
 				else
 				{
-					mul::sfe::AutotilerVXAce a;
-
-					std::array<sf::IntRect,4> minitiles = a.generateTile(tile, topLeftCorner);
-
-					for(int i = 0 ; i < 4 ; i++)
-					{
-						m_map.layers[l].tiles.emplace_back(*m_tilesets[tileset].tileset, minitiles[i]);
-						m_map.layers[l].tiles.back().setPosition(
-								static_cast<float>(x*m_map.tileSize+(m_map.tileSize/2)*(i&0x1)),
-								static_cast<float>(y*m_map.tileSize+(m_map.tileSize/2)*((i>>1)&0x1)));
-					}
+					// non autotile
 				}
 			}
 		}
