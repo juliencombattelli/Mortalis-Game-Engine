@@ -1,5 +1,5 @@
 #include <GameTest/Scenes/CarreRouge.hpp>
-#include <MGE/Input/KeyboardAPI.hpp>
+#include <MGE/Input/Input.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
 namespace rpg

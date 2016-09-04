@@ -87,5 +87,3 @@ bool operator<=(const Status& lhs, Status::Value rhs)
 }
 
 } // namespace mge
-
-

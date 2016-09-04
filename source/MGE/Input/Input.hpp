@@ -1,5 +1,5 @@
 //============================================================================
-// Name        : KeyboardAPI.hpp
+// Name        : Input.hpp
 // Author      : Julien Combattelli
 // EMail       : julien.combattelli@hotmail.com
 // Date		   : 29 juin 2016
@@ -9,10 +9,10 @@
 // Description :
 //============================================================================
 
-#ifndef KEYBOARDAPI_HPP_
-#define KEYBOARDAPI_HPP_
+#ifndef INPUT_HPP_
+#define INPUT_HPP_
 
 #include <MGE/Config/ActionConfig.hpp>
 #include <MGE/Input/Keyboard/Keyboard.hpp>
 
-#endif // KEYBOARDAPI_HPP_
+#endif // INPUT_HPP_

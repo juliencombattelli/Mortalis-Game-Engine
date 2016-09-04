@@ -4,7 +4,7 @@
 // EMail       : julien.combattelli@hotmail.com
 // Date		   : 2 juil. 2016
 // Version     : 1.0.0
-// Copyright   : This file is part of MortalisGameEngine project which is released under
+// Copyright   : This file is part of MGE project which is released under
 //               MIT license. See file LICENSE.txt for full license details
 // Description : 
 //============================================================================

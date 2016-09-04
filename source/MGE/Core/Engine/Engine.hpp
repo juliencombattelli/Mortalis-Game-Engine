@@ -15,9 +15,8 @@
 #include <MGE/Config/CompilerConfig.hpp>
 #include <MGE/Core/Scene/SceneManager.hpp>
 #include <MGE/Core/Status/Status.hpp>
+#include <MGE/Input/Input.hpp>
 #include <MGE/Resource/ResourceManager.hpp>
-#include <MGE/Input/KeyboardAPI.hpp>
-
 #include <MUL/Event/Event.hpp>
 
 #include <SFML/Graphics.hpp>

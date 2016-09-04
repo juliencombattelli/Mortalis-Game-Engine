@@ -59,6 +59,4 @@ bool operator<=(const Status& lhs, Status::Value rhs);
 
 } // namespace mge
 
-
-
 #endif // STATUS_HPP_

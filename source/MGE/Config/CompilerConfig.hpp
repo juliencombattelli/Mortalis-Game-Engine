@@ -12,6 +12,7 @@
 #ifndef COMPILERCONFIG_HPP_
 #define COMPILERCONFIG_HPP_
 
+// DO NOT EDIT
 #if __cplusplus < 201103L
   #error This library needs at least a C++11 compliant compiler
 #endif

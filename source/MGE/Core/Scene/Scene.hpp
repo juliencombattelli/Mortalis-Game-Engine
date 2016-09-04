@@ -1,8 +1,19 @@
+//============================================================================
+// Name        : Scene.hpp
+// Author      : Julien Combattelli
+// EMail       : julien.combattelli@hotmail.com
+// Date		   : 2 juil. 2016
+// Version     : 1.0.0
+// Copyright   : This file is part of MGE project which is released under
+//               MIT license. See file LICENSE.txt for full license details
+// Description :
+//============================================================================
+
 #ifndef SCENE_HPP_
 #define SCENE_HPP_
 
+#include <MGE/Input/Input.hpp>
 #include <SFML/Graphics.hpp>
-#include <MGE/Input/KeyboardAPI.hpp>
 
 namespace mge
 {

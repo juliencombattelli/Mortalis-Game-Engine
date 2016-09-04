@@ -72,6 +72,14 @@ private:
 
     const int m_tileSize;
 
+    /* I could replace m_mapLayers with m_map of type vector<vector<sf:Sprite>>
+     * But this could be mistaken for a 2D array of tiles
+     *
+     * So this struct force to use the map as follows :
+     * 		m_mapLayer[<layer index>].tiles[<tile index>]
+     * instead of :
+     * 		m_map[<layer index>][<tile index>]
+     */
 	struct TileMapLayer
 	{
 		std::vector<sf::Sprite> tiles;

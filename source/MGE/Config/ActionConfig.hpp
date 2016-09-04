@@ -18,6 +18,7 @@
 namespace mge
 {
 
+// Add your custom actions here
 enum class Action : std::int8_t
 {
 	pause,
@@ -32,6 +33,7 @@ enum class Action : std::int8_t
 	invalid    ///< DO NOT EDIT
 };
 
+// Register your custom actions in this vector
 const std::vector<Action> directionalActions
 {
 	Action::moveUp, Action::moveDown, Action::moveLeft, Action::moveRight

@@ -22,7 +22,7 @@ namespace game
 
 SceneMap::SceneMap(mge::ResourceManager& resourceManager) :
 		m_camera(mge::TileSize),
-		m_map(resourceManager, mge::tilesetDirectory, mge::TileSize),
+		m_map(resourceManager, mge::TilesetDirectory, mge::TileSize),
 		m_actor1Texture("resources/Actor1.png", resourceManager)
 {
     m_map.load(map0);
