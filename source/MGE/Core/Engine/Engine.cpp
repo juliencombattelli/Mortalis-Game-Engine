@@ -84,7 +84,7 @@ void Engine::init()
 	m_resourceManager.registerHolder<FontHolder>();
 	m_sceneManager.init(m_resourceManager);
     //mRendererManager.init();
-	m_window.create(sf::VideoMode(800,600), "SFML !");
+	m_window.create(sf::VideoMode(200,150), "SFML !");
 
 	// TODO : test on Windows
 	sf::Image icon;

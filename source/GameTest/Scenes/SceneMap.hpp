@@ -12,12 +12,13 @@
 #ifndef SCENEMAP_HPP_
 #define SCENEMAP_HPP_
 
+#include <GameTest/Sprites/HerosSprite.hpp>
 
 #include <MGE/Core/Scene/Scene.hpp>
 #include <MGE/Resource/TemplateResource.hpp>
 #include <MGE/Config/MapConfig.hpp>
 
-#include <GameTest/Sprites/HerosSprite.hpp>
+#include <MUL/SFE/Camera.hpp>
 
 namespace game
 {
@@ -37,12 +38,9 @@ public:
 
 private:
 
-    void updateView();
-
-    sf::View m_view;
+    mul::sfe::Camera m_camera;
     mge::Map m_map;
     mge::TextureResource m_actor1Texture;
-    //mge::TextureResource m_worldA2Texture;
     game::HerosSprite m_heros;
 };
 
