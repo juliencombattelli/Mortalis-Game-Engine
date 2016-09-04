@@ -13,16 +13,23 @@
 #define MAPCONFIG_HPP_
 
 // If needed, replace this include with yours
-#include <MUL/SFE/TileMap.hpp>
+#include <MGE/Map/TileMap.hpp>
+
+#include <map>
+#include <string>
 
 namespace mge
 {
 
 // If needed, replace with your custom map class
-using Map = mul::sfe::TileMap;
+using Map = mge::TileMap;
+using MapData = mge::TileMapData;
 
 // Replace with your tile size (tiles must be square)
-constexpr int TileSize = 32;
+const int TileSize = 32;
+
+// Replace with your map directory
+const std::string tilesetDirectory = "resources/";
 
 } // namespace mge
 

@@ -9,23 +9,15 @@
 // Description : 
 //============================================================================
 
-
-/*
- * WARNING : Deprecated !!!
- * Will be removed in a future release
- *
- * Use mul::sfe::TileMap instead
- *
- */
-
 #ifndef TILEMAP_HPP_
 #define TILEMAP_HPP_
 
-#include <SFML/Graphics/VertexArray.hpp>
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/Transformable.hpp>
+#include <MUL/SFE/AutotilerVXAce.hpp>
 
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+
+#include <vector>
 #include <memory>
 
 namespace mge
@@ -33,51 +25,67 @@ namespace mge
 
 class ResourceManager;
 
-struct MapLayer
+struct TilesetData
 {
-	std::shared_ptr<sf::Texture> tileset;
-	std::vector<uint32_t> tiles;
-	sf::VertexArray vertices;
+	std::string name;
+	bool isAutotile;
+	sf::Vector2i tileNumber;
+	sf::Vector2i autotileNumber;
 };
 
 struct TileMapData
 {
-	std::string mapName;
-	sf::Vector2u tileSize;
-	sf::Vector2u size;
-
-	MapLayer layer1;
+	std::string name;
+	int row;
+	int column;
+	std::map<int,TilesetData> tilesets;
+	std::vector<int> tiles;
 };
 
-template<class TMapData>
-class TileMap : public sf::Drawable, public sf::Transformable
+class TileMap : public sf::Drawable
 {
 public:
 
-	TileMap(ResourceManager& resourceManager);
-	TileMap(const TileMap&) = delete;
-	TileMap& operator=(const TileMap&)= delete;
-    ~TileMap() = default;
+	TileMap(ResourceManager& resourceManager, const std::string& tilesetDirectory, int tileSize);
 
-    bool load(const std::string& mapName);
+	void load(const TileMapData& mapData);
 
-    sf::Vector2u getSizePixel() const { return { m_data->size.x * m_data->tileSize.x, m_data->size.y * m_data->tileSize.y}; }
-
-    // set private ?
-    bool loadFromFile(const std::string& mapName);
-    bool loadFromMemory(TileMapData& data);
+	sf::Vector2f getSize() const;
 
 private:
 
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
+    void loadTilesetTextures(const TileMapData& map);
+
+    void createTransparentTile(int tileSize);
+
+    int getLayerCount(const TileMapData& mapData) const;
+
+    void loadTile(const TileMapData& mapData, int layerIndex, int tileIndex, int tileset, int x, int y);
+
+    void loadAutotile(const TileMapData& mapData, int layerIndex, int tileIndex, int tileset, int x, int y);
 
     ResourceManager& m_resourceManager;
 
-    TileMapData* m_data;
+    std::string m_tilesetDirectory;
+
+    const int m_tileSize;
+
+	struct TileMapLayer
+	{
+		std::vector<sf::Sprite> tiles;
+	};
+
+	std::vector<TileMapLayer> m_mapLayers;
+
+	const TileMapData* m_mapData;
+
+    std::map<int,std::shared_ptr<const sf::Texture>> m_tilesetTextureMap;
+
+    sf::Texture m_transparentTile;
 };
 
 } // namespace mge
-
-#include <MGE/Map/TileMap.inl>
 
 #endif // TILEMAP_HPP_

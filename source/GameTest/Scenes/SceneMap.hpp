@@ -42,7 +42,7 @@ private:
     sf::View m_view;
     mge::Map m_map;
     mge::TextureResource m_actor1Texture;
-    mge::TextureResource m_worldA2Texture;
+    //mge::TextureResource m_worldA2Texture;
     game::HerosSprite m_heros;
 };
 

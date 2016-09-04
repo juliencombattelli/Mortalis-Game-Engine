@@ -8,106 +8,133 @@
 //               MIT license. See file LICENSE.txt for full license details
 // Description : 
 //============================================================================
-/*
+
 #include <MGE/Map/TileMap.hpp>
+#include <MGE/Resource/TemplateResource.hpp>
+
 #include <SFML/Graphics/RenderTarget.hpp>
 
 namespace mge
 {
 
-TileMap::TileMap(ResourceManager& resourceManager) :
-	m_resourceManager(resourceManager)
+TileMap::TileMap(ResourceManager& resourceManager, const std::string& tilesetDirectory, int tileSize) :
+	m_resourceManager(resourceManager),
+	m_tilesetDirectory(tilesetDirectory),
+	m_tileSize(tileSize),
+	m_mapData(nullptr)
 {
 
 }
 
-bool TileMap::load(const std::string& mapName)
+void TileMap::load(const TileMapData& mapData)
 {
-    if(not loadFromFile(mapName))
-    	return false;
+	m_mapData = &mapData;
 
-    m_data.layer1.vertices.setPrimitiveType(sf::Quads);
-    m_data.layer1.vertices.resize(m_data.size.x * m_data.size.y * 4);
+	createTransparentTile(m_tileSize);
 
-    for (uint32_t i = 0; i < m_data.size.x; ++i)
-        for (uint32_t j = 0; j < m_data.size.y; ++j)
-        {
-            uint32_t tileNumber = static_cast<uint32_t>(m_data.layer1.tiles[i + j * m_data.size.x]);
+	loadTilesetTextures(mapData);
 
-            uint32_t tu = tileNumber % m_data.size.x;
-            uint32_t tv = tileNumber / m_data.size.x;
+	int layerCount = getLayerCount(mapData);
 
-            sf::Vertex* quad = &m_data.layer1.vertices[(i + j * m_data.size.x) * 4];
+	m_mapLayers.resize(layerCount);
 
-            if(quad == nullptr)
-            	return false;
+	for(int l = 0 ; l < layerCount ; l++)
+	{
+		m_mapLayers[l].tiles.clear();
 
-            quad[0].position = sf::Vector2f(float(i * m_data.tileSize.x), float(j * m_data.tileSize.y));
-            quad[1].position = sf::Vector2f(float((i + 1) * m_data.tileSize.x), float(j * m_data.tileSize.y));
-            quad[2].position = sf::Vector2f(float((i + 1) * m_data.tileSize.x), float((j + 1) * m_data.tileSize.y));
-            quad[3].position = sf::Vector2f(float(i * m_data.tileSize.x), float((j + 1) * m_data.tileSize.y));
+		for(int x = 0 ; x < mapData.column ; x++)
+		{
+			for(int y = 0 ; y < mapData.row ; y++)
+			{
+				int tileIndex = y*mapData.column + x + l*mapData.column*mapData.row;
+				int tileset = (mapData.tiles[tileIndex] & 0xF0000) >> 16;
 
-            quad[0].texCoords = sf::Vector2f(float(tu * m_data.tileSize.x), float(tv * m_data.tileSize.y));
-            quad[1].texCoords = sf::Vector2f(float((tu + 1) * m_data.tileSize.x), float(tv * m_data.tileSize.y));
-            quad[2].texCoords = sf::Vector2f(float((tu + 1) * m_data.tileSize.x), float((tv + 1) * m_data.tileSize.y));
-            quad[3].texCoords = sf::Vector2f(float(tu * m_data.tileSize.x), float((tv + 1) * m_data.tileSize.y));
-        }
-
-    return true;
+				if(mapData.tiles[tileIndex] == 0xFFFFF)
+					m_mapLayers[l].tiles.emplace_back(m_transparentTile);
+				else
+				{
+					if(mapData.tilesets.at(tileset).isAutotile)
+					{
+						loadAutotile(mapData, l, tileIndex, tileset, x, y);
+					}
+					else
+					{
+						loadTile(mapData, l, tileIndex, tileset, x, y);
+					}
+				}
+			}
+		}
+	}
 }
 
-bool TileMap::loadFromFile(const std::string& mapName)
-{*/
-    /*utility::ibfstream file( mapFolder + mapName + mapExt );
-
-    if(not file.isOpen())
-        return false;
-
-    size_t fileLength = file.getFileLength();
-    uint8_t* buffer = new uint8_t[fileLength];
-    size_t position = 0;
-
-    file.read(buffer, fileLength);
-
-    m_data.mapName = utility::readString(buffer, 0, 20);
-    position += m_data.mapName.size()+1;
-
-    std::string tilesheetName = utility::readString(buffer, position, 20);
-    m_data.layer1.tileset = &m_data.resourceManager.getTextureResource(tilesheetName);
-    position += tilesheetName.size()+1;
-
-    m_data.tileSize = utility::read4Byte(buffer, position);
-    position += 4;
-
-    mSize.x = utility::read4Byte(buffer, position);
-    position += 4;
-
-    mSize.y = utility::read4Byte(buffer, position);
-    position += 4;
-
-    mTilesLayer1.resize(mSize.x*mSize.y);
-    mTilesLayer1.assign(mSize.x*mSize.y, 0x00);
-
-    delete[] buffer;
-
-    file.close();*//*
-
-    return true;
-}
-
-bool TileMap::loadFromMemory(const TileMapData& data)
+sf::Vector2f TileMap::getSize() const
 {
-	m_data = data;
-    return true;
+	return {static_cast<float>(m_mapData->column*m_tileSize),static_cast<float>(m_mapData->row*m_tileSize)};
 }
 
 void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    states.transform *= getTransform();
-
-    states.texture = m_data.layer1.tileset.get();
-
-    target.draw(m_data.layer1.vertices, states);
+	for(auto& layer : m_mapLayers)
+		for(auto& tile : layer.tiles)
+			target.draw(tile, states);
 }
 
-} // namespace mge*/
+void TileMap::loadTilesetTextures(const TileMapData& map)
+{
+	for(auto& pair : map.tilesets)
+	{
+		TextureResource resource(m_tilesetDirectory + pair.second.name, m_resourceManager);
+		m_tilesetTextureMap[pair.first] = std::make_shared<const sf::Texture>(resource.getResource());
+	}
+}
+
+void TileMap::createTransparentTile(int tileSize)
+{
+	sf::Image transparent;
+	transparent.create(tileSize,tileSize,sf::Color::Transparent);
+	m_transparentTile.loadFromImage(transparent);
+}
+
+int TileMap::getLayerCount(const TileMapData& mapData) const
+{
+	//assert(tiles.size()%(column*row) == 0);
+	return mapData.tiles.size() / (mapData.column*mapData.row);
+}
+
+void TileMap::loadTile(const TileMapData& mapData,int layerIndex, int tileIndex, int tileset, int x, int y)
+{
+	int tile = mapData.tiles[tileIndex] & 0x0FFFF;
+
+	sf::IntRect intRect
+	(
+		(tile%mapData.tilesets.at(tileset).tileNumber.x)*m_tileSize,
+		(tile/mapData.tilesets.at(tileset).tileNumber.x)*m_tileSize,
+		m_tileSize,
+		m_tileSize
+	);
+
+	m_mapLayers[layerIndex].tiles.emplace_back(*m_tilesetTextureMap[tileset],intRect);
+	m_mapLayers[layerIndex].tiles.back().setPosition(x*m_tileSize, y*m_tileSize);
+}
+
+void TileMap::loadAutotile(const TileMapData& mapData, int layerIndex, int tileIndex, int tileset, int x, int y)
+{
+	int tile = mapData.tiles[tileIndex] & 0x000FF;
+	int autotile = (mapData.tiles[tileIndex] & 0x0FF00) >> 8;
+
+	sf::Vector2i topLeftCorner((autotile%8)*m_tileSize*2,(autotile/8)*m_tileSize*3);
+
+	mul::sfe::AutotilerVXAce a;
+
+	std::array<sf::IntRect,4> minitiles = a.generateTile(tile, topLeftCorner);
+
+	for(int i = 0 ; i < 4 ; i++)
+	{
+		m_mapLayers[layerIndex].tiles.emplace_back(*m_tilesetTextureMap[tileset], minitiles[i]);
+		m_mapLayers[layerIndex].tiles.back().setPosition(
+			static_cast<float>(x*m_tileSize+(m_tileSize/2)*(i&0x1)),
+			static_cast<float>(y*m_tileSize+(m_tileSize/2)*((i>>1)&0x1)));
+	}
+}
+
+} // namespace mge

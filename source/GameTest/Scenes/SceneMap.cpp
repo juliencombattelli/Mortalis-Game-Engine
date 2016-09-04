@@ -18,12 +18,10 @@ namespace game
 {
 
 SceneMap::SceneMap(mge::ResourceManager& resourceManager) :
-		m_map(mge::TileSize),
-		m_actor1Texture("resources/Actor1.png", resourceManager),
-		m_worldA2Texture("resources/World_A2.png", resourceManager)
+		m_map(resourceManager, mge::tilesetDirectory, mge::TileSize),
+		m_actor1Texture("resources/Actor1.png", resourceManager)
 {
-	m_map.addAutotileset(1,m_worldA2Texture.getResource());
-    m_map.loadFromMapData(map0);
+    m_map.load(map0);
 
     m_heros.init(m_actor1Texture.getResource());
 
