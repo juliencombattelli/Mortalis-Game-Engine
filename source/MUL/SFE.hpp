@@ -17,7 +17,6 @@
 #include <MUL/SFE/SpriteGenerator.hpp>
 #include <MUL/SFE/AnimatedSprite.hpp>
 #include <MUL/SFE/Keyboard.hpp>
-#include <MUL/SFE/TileMap.hpp>
 #include <MUL/SFE/FpsCalculator.hpp>
 
 #endif // SFE_HPP_

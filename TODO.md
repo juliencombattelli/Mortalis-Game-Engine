@@ -15,7 +15,7 @@
 
 #### Map module
 
-- [ ] remove mul::sfe::TileMap
+- [x] remove mul::sfe::TileMap
 - [ ] move tilesets data in an other struture and only leave tilesets id in MapData, to avoid data duplication
 - [ ] load tilesets data from text file (maybe YAML or JSON)
 - [ ] move maps data into a binary or text file (maybe YAML or JSON)
