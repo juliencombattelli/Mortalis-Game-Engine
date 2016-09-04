@@ -3,7 +3,7 @@
 
 #### Camera module
 
-- [ ] add a Player-Follow Camera class to manage the sf::View
+- [x] add a Player-Follow Camera class to manage the sf::View
 
 #### Input module
 
