@@ -13,6 +13,7 @@
 #define TEMPLATERESOURCEHOLDER_HPP_
 
 #include <MGE/Resource/Details/AbstractResourceHolder.hpp>
+#include <MGE/Resource/Details/InputFileWrapper.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Shader.hpp>
@@ -73,6 +74,7 @@ using TextureHolder 	= TemplateResourceHolder<sf::Texture>;
 using FontHolder 		= TemplateResourceHolder<sf::Font>;
 using ShaderHolder		= TemplateResourceHolder<sf::Shader>;
 using SoundHolder 		= TemplateResourceHolder<sf::SoundBuffer>;
+using InputFileHolder	= TemplateResourceHolder<InputFileWrapper>;
 
 } // namespace mge
 

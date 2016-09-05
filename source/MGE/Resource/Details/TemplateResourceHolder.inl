@@ -42,7 +42,7 @@ auto TemplateResourceHolder<R>::getReference(const std::string& resourceFilename
 	}
 
 	if(resource == nullptr)
-		resource = std::make_shared<R>(m_dummyResource);
+		resource = std::make_shared<R>(std::move(m_dummyResource));
 
 	return resource;
 }

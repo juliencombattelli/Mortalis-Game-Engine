@@ -28,6 +28,13 @@ SceneMap::SceneMap(mge::ResourceManager& resourceManager) :
     m_map.load(map0);
 
     m_heros.init(m_actor1Texture.getResource());
+
+    mge::InputFileResource file("LICENSE.txt", resourceManager);
+    std::ifstream& stream = file.getResource().getStream();
+
+    std::cout << stream.rdbuf() << std::endl;
+
+    stream.close();
 }
 
 void SceneMap::handleEvent(sf::Event& event, const mge::Keyboard& keyboard)

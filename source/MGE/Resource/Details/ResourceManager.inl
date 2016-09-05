@@ -12,6 +12,8 @@
 #ifndef RESOURCEMANAGER_INL_
 #define RESOURCEMANAGER_INL_
 
+#include <string>
+
 namespace mge
 {
 
@@ -21,13 +23,16 @@ auto ResourceManager::getHolder() const
 {
 	TemplateResourceHolder<resourceType>* handler = nullptr;
 
-	auto it = m_holders.find(typeid(resourceType).name());
+	std::string typeName(typeid(resourceType).name());
+
+	auto it = m_holders.find(typeName);
 
 	if(it != m_holders.end())
 		handler = static_cast<TemplateResourceHolder<resourceType>*>(it->second.get());
 
 	if(handler == nullptr) // error : handler not find
-		std::cout << "handler not find" << std::endl;
+		std::cout << "Holder \"" << typeName << "\" not find.\n"
+				  << "Don't you forget to register the holder in mge::Engine::init() ?" << std::endl;
 
 	return handler;
 }
@@ -35,7 +40,7 @@ auto ResourceManager::getHolder() const
 template<class handlerType>
 void ResourceManager::registerHolder()
 {
-	std::string typeName = typeid(typename handlerType::ResourceType).name();
+	std::string typeName(typeid(typename handlerType::ResourceType).name());
 
 	if(m_holders.find(typeName) == m_holders.end())
 		m_holders.emplace(typeName, std::make_unique<handlerType>());

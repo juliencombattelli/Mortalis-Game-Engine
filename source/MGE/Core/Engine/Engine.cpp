@@ -82,8 +82,12 @@ void Engine::init()
 {
 	m_resourceManager.registerHolder<TextureHolder>();
 	m_resourceManager.registerHolder<FontHolder>();
+	m_resourceManager.registerHolder<InputFileHolder>();
+
 	m_sceneManager.init(m_resourceManager);
+
     //mRendererManager.init();
+
 	m_window.create(sf::VideoMode(200,150), "SFML !");
 
 	// TODO : test on Windows

@@ -12,10 +12,10 @@
 #ifndef TEMPLATERESOURCE_HPP_
 #define TEMPLATERESOURCE_HPP_
 
-#include <string>
-#include <iostream>
 #include <MGE/Resource/ResourceManager.hpp>
 #include <MGE/Resource/TemplateResourceHolder.hpp>
+
+#include <string>
 
 namespace sf
 {
@@ -60,6 +60,7 @@ protected:
 
 using FontResource = TemplateResource<sf::Font>;
 using TextureResource = TemplateResource<sf::Texture>;
+using InputFileResource = TemplateResource<InputFileWrapper>;
 
 } // namespace mge
 
