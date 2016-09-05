@@ -30,7 +30,7 @@
 
 #### Resource module
 
-- [ ] add a text file resource
+- [x] add a text file resource
 
 #### Scene module
 
