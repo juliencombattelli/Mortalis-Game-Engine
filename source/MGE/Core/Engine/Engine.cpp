@@ -11,6 +11,7 @@
 
 #include <MGE/Core/Engine/Engine.hpp>
 #include <MGE/Core/Event/Event.hpp>
+#include <MGE/Resource/Resource.hpp>
 #include <MUL/SFE/Keyboard.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -22,7 +23,7 @@ Engine::Engine() :
     m_isRunning(false),
 	m_exitStatus(Status::StatusNoError)
 {
-    init();
+
 }
 
 Engine::~Engine()
@@ -48,9 +49,22 @@ Status Engine::run()
 {
 	m_isRunning = true;
 
-    gameLoop();
+	try
+	{
+		init();
 
-    cleanup();
+		gameLoop();
+
+		cleanup();
+	}
+	catch(const std::exception& e)
+	{
+		openErrorWindow(m_exitStatus, e.what());
+	}
+	catch(...)
+	{
+		openErrorWindow(m_exitStatus, "An unknown error occured");
+	}
 
     m_isRunning = false;
 
@@ -60,8 +74,10 @@ Status Engine::run()
 void Engine::openErrorWindow(Status status, const std::string& errorMessage)
 {
 	m_window.close();
-	m_window.create(sf::VideoMode(200,100), "Error", sf::Style::Close);
+	m_window.create(sf::VideoMode(400,100), "Error", sf::Style::Close);
 	m_isRunning = false;
+	FontResource font("resources/NotoSans-Regular.ttf",m_resourceManager);
+	sf::Text errorText(errorMessage, font.get(), 20);
 	while(m_window.isOpen())
 	{
 		sf::Event event;
@@ -74,27 +90,28 @@ void Engine::openErrorWindow(Status status, const std::string& errorMessage)
 			}
 		}
 		m_window.clear();
+		m_window.draw(errorText);
 		m_window.display();
 	}
 }
 
 void Engine::init()
 {
-	m_resourceManager.registerHolder<TextureHolder>();
+	/*m_resourceManager.registerHolder<TextureHolder>();
 	m_resourceManager.registerHolder<FontHolder>();
-	m_resourceManager.registerHolder<InputFileHolder>();
+	m_resourceManager.registerHolder<InputFileHolder>();*/
 
 	m_sceneManager.init(m_resourceManager);
 
     //mRendererManager.init();
 
-	m_window.create(sf::VideoMode(200,150), "SFML !");
+	m_window.create(sf::VideoMode(800,600), "SFML !");
 
 	// TODO : test on Windows
-	sf::Image icon;
+	/*sf::Image icon;
 	if(not icon.loadFromFile("resources/dragon-red.png"))
 		std::cout << "error loading icon" << std::endl;
-	m_window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+	m_window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());*/
 	//m_window.setIcon(gimp_image.width,  gimp_image.height,  gimp_image.pixel_data);
 }
 
@@ -106,7 +123,7 @@ void Engine::handleEvent(Scene& scene)
         if(event.type == sf::Event::Closed or
 				mul::sfe::Keyboard::areKeyPressed({sf::Keyboard::LAlt, sf::Keyboard::F4}))
         {
-            quit(Status::StatusAppInitFailed);
+            quit(Status::StatusUserQuit);
         }
 
         else if(event.type == sf::Event::GainedFocus)
@@ -139,17 +156,17 @@ void Engine::gameLoop()
     {
         Scene& scene = m_sceneManager.getActiveState();
 
-        m_keyboard.update();
+		m_keyboard.update();
 
-        handleEvent(scene);
+		handleEvent(scene);
 
-        scene.update(frameClock.restart().asSeconds());
+		scene.update(frameClock.restart().asSeconds());
 
-        m_window.clear();
+		m_window.clear();
 
-        scene.draw(m_window);
+		scene.draw(m_window);
 
-        m_window.display();
+		m_window.display();
     }
 }
 
