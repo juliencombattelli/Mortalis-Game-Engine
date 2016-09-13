@@ -5,9 +5,17 @@
 
 - [x] add a Player-Follow Camera class to manage the sf::View
 
+#### Error handling module
+
+- [ ] add ErrorWindow class, derived for each kind of error (resource missing, fatal error like out of range ...)
+
 #### Input module
 
+- [ ] add an actionManager use isActionRequired... functions => user will use it instead of mge::Keyboard
+
 #### Internal Event module
+
+- [ ] handle exceptions
 
 #### Log module
 
@@ -24,6 +32,7 @@
 
 #### Phisics module
 
+- [ ] add a tile movement for Player instead of a pixel movement
 - [ ] add collision detection class
 
 #### Render module
