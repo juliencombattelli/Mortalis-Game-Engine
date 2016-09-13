@@ -14,10 +14,10 @@
 namespace mge
 {
 
-DummyScene::DummyScene(const ResourceManager& resourceManager) :
+DummyScene::DummyScene(ResourceManager& resourceManager) :
 	m_font("resources/NotoSans-Regular.ttf", resourceManager),
 	m_text("\nThis is a dummy scene.\nYou probably forget to set InitialScene typedef in MGE/Config/SceneConfig.hpp.",
-			m_font.getResource(), 20)
+			m_font.get(), 20)
 {
 
 }

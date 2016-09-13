@@ -10,8 +10,7 @@
 //============================================================================
 
 #include <MGE/Map/TileMap.hpp>
-#include <MGE/Resource/TemplateResource.hpp>
-
+#include <MGE/Resource/Resource.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
 namespace mge
@@ -84,7 +83,7 @@ void TileMap::loadTilesetTextures(const TileMapData& map)
 	for(auto& pair : map.tilesets)
 	{
 		TextureResource resource(m_tilesetDirectory + pair.second.name, m_resourceManager);
-		m_tilesetTextureMap[pair.first] = std::make_shared<const sf::Texture>(resource.getResource());
+		m_tilesetTextureMap[pair.first] = std::make_shared<const sf::Texture>(resource.get());
 	}
 }
 

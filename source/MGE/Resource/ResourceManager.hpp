@@ -12,11 +12,11 @@
 #ifndef RESOURCEMANAGER_HPP_
 #define RESOURCEMANAGER_HPP_
 
-#include <MGE/Resource/TemplateResourceHolder.hpp>
 #include <map>
 #include <typeinfo>
 #include <memory>
 #include <iostream>
+#include <MGE/Resource/Details/ResourceHolder.hpp>
 
 namespace mge
 {
@@ -25,20 +25,26 @@ class ResourceManager
 {
 public:
 
+	using HolderMap = std::map<std::string, std::unique_ptr<BaseResourceHolder>>;
+	using RegistationResult = std::pair<HolderMap::iterator,bool>;
+
 	ResourceManager() = default;
 	virtual ~ResourceManager() = default;
 
 	template<class resourceType>
-	TemplateResourceHolder<resourceType>* getHolder() const;
+	ResourceHolder<resourceType>* getHolder() const;
 
-	template<class handlerType>
-	void registerHolder();
+	template<class resourceType>
+	ResourceHolder<resourceType>* getHolderOrCreate();
+
+	template<class holderType>
+	RegistationResult registerHolder();
 
 	bool loadAllResources();
 
 private:
 
-	std::map<std::string, std::unique_ptr<AbstractResourceHolder>> m_holders;
+	HolderMap m_holders;
 
 	ResourceManager(const ResourceManager&) = delete;
 	ResourceManager& operator=(const ResourceManager&) = delete;

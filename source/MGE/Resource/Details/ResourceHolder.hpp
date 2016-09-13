@@ -1,5 +1,5 @@
 //============================================================================
-// Name        : TemplateResourceHolder.hpp
+// Name        : ResourceHolder.hpp
 // Author      : Julien Combattelli
 // EMail       : julien.combattelli@hotmail.com
 // Date		   : Jul 3, 2016
@@ -9,15 +9,16 @@
 // Description : 
 //============================================================================
 
-#ifndef TEMPLATERESOURCEHOLDER_HPP_
-#define TEMPLATERESOURCEHOLDER_HPP_
+#ifndef RESOURCEHOLDER_HPP_
+#define RESOURCEHOLDER_HPP_
 
-#include <MGE/Resource/Details/AbstractResourceHolder.hpp>
-#include <MGE/Resource/Details/InputFileWrapper.hpp>
+#include <MGE/Resource/Details/BaseResourceHolder.hpp>
+
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Shader.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
+
 #include <map>
 #include <typeinfo>
 #include <memory>
@@ -26,7 +27,7 @@ namespace mge
 {
 
 template<class TResource>
-class TemplateResourceHolder : public AbstractResourceHolder
+class ResourceHolder : public BaseResourceHolder
 {
 private:
 
@@ -39,9 +40,9 @@ public:
 
 	using ResourceType = TResource;
 
-	TemplateResourceHolder();
+	ResourceHolder();
 
-	virtual ~TemplateResourceHolder() = default;
+	virtual ~ResourceHolder() = default;
 
 	std::shared_ptr<TResource> getReference(const std::string& resourceFilename);
 
@@ -55,7 +56,7 @@ public:
 
 protected:
 
-	virtual bool loadFromFile(const std::string& resourceFilename, TResource& resource);
+	virtual bool load(const std::string& resourceFilename, TResource& resource);
 
 private:
 
@@ -70,14 +71,8 @@ private:
 	};
 };
 
-using TextureHolder 	= TemplateResourceHolder<sf::Texture>;
-using FontHolder 		= TemplateResourceHolder<sf::Font>;
-using ShaderHolder		= TemplateResourceHolder<sf::Shader>;
-using SoundHolder 		= TemplateResourceHolder<sf::SoundBuffer>;
-using InputFileHolder	= TemplateResourceHolder<InputFileWrapper>;
-
 } // namespace mge
 
-#include <MGE/Resource/Details/TemplateResourceHolder.inl>
+#include <MGE/Resource/Details/ResourceHolder.inl>
 
-#endif // TEMPLATERESOURCEHOLDER_HPP_
+#endif // RESOURCEHOLDER_HPP_

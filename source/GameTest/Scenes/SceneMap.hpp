@@ -15,8 +15,8 @@
 #include <GameTest/Sprites/HerosSprite.hpp>
 
 #include <MGE/Core/Scene/Scene.hpp>
-#include <MGE/Resource/TemplateResource.hpp>
 #include <MGE/Config/MapConfig.hpp>
+#include <MGE/Resource/Resource.hpp>
 
 #include <MUL/SFE/Camera.hpp>
 

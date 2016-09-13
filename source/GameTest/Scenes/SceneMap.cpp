@@ -11,7 +11,6 @@
 
 #include <GameTest/Scenes/SceneMap.hpp>
 #include <GameTest/Maps/Maps.hpp>
-
 #include <MGE/Resource/ResourceManager.hpp>
 
 #include <SFML/Window/Keyboard.hpp>
@@ -27,14 +26,11 @@ SceneMap::SceneMap(mge::ResourceManager& resourceManager) :
 {
     m_map.load(map0);
 
-    m_heros.init(m_actor1Texture.getResource());
+    m_heros.init(m_actor1Texture.get());
 
-    mge::InputFileResource file("LICENSE.txt", resourceManager);
-    std::ifstream& stream = file.getResource().getStream();
-
-    std::cout << stream.rdbuf() << std::endl;
-
-    stream.close();
+    mge::InputFileResource licenseFile("LICENSE.txt", resourceManager);
+    std::cout << licenseFile->rdbuf() << std::endl;
+	licenseFile->close();
 }
 
 void SceneMap::handleEvent(sf::Event& event, const mge::Keyboard& keyboard)

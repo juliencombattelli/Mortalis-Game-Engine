@@ -1,5 +1,5 @@
 //============================================================================
-// Name        : TemplateResourceHolder.inl
+// Name        : ResourceHolder.inl
 // Author      : Julien Combattelli
 // EMail       : julien.combattelli@hotmail.com
 // Date		   : Jul 5, 2016
@@ -9,21 +9,23 @@
 // Description : 
 //============================================================================
 
-#ifndef TEMPLATERESOURCEHOLDER_INL_
-#define TEMPLATERESOURCEHOLDER_INL_
+#ifndef RESOURCEHOLDER_INL_
+#define RESOURCEHOLDER_INL_
+
+#include <MGE/Resource/Details/ResourceExceptions.hpp>
 
 namespace mge
 {
 
 template<class R>
-TemplateResourceHolder<R>::TemplateResourceHolder() :
-	AbstractResourceHolder(typeid(R).name())
+ResourceHolder<R>::ResourceHolder() :
+	BaseResourceHolder(typeid(R).name())
 {
 
 }
 
 template<class R>
-auto TemplateResourceHolder<R>::getReference(const std::string& resourceFilename)
+auto ResourceHolder<R>::getReference(const std::string& resourceFilename)
 	-> std::shared_ptr<R>
 {
 	std::shared_ptr<R> resource;
@@ -38,17 +40,18 @@ auto TemplateResourceHolder<R>::getReference(const std::string& resourceFilename
 	{
 		auto it = createResource(resourceFilename);
 		resource = it->second.resource;
-		loadResource(resourceFilename);
+		if(not loadResource(resourceFilename))
+			throw LoadResourceException(resourceFilename);
 	}
 
 	if(resource == nullptr)
-		resource = std::make_shared<R>(std::move(m_dummyResource));
+		resource = std::make_shared<R>();
 
 	return resource;
 }
 
 template<class R>
-auto TemplateResourceHolder<R>::isLoaded(const std::string& resourceFilename) const
+auto ResourceHolder<R>::isLoaded(const std::string& resourceFilename) const
 	-> bool
 {
 	bool loaded = false;
@@ -65,18 +68,18 @@ auto TemplateResourceHolder<R>::isLoaded(const std::string& resourceFilename) co
 }
 
 template<class R>
-auto TemplateResourceHolder<R>::createResource(const std::string& resourceFilename)
-	-> typename TemplateResourceHolder<R>::Iterator
+auto ResourceHolder<R>::createResource(const std::string& resourceFilename)
+	-> typename ResourceHolder<R>::Iterator
 {
 	ResourceData resourceData;
 	resourceData.resource = std::make_shared<R>();
 	resourceData.loaded = false;
 
-	return m_resources.insert({resourceFilename, resourceData}).first;
+	return m_resources.emplace(resourceFilename, resourceData).first;
 }
 
 template<class R>
-auto TemplateResourceHolder<R>::loadResource(const std::string& resourceFilename)
+auto ResourceHolder<R>::loadResource(const std::string& resourceFilename)
 	-> bool
 {
 	bool loaded = false;
@@ -87,7 +90,7 @@ auto TemplateResourceHolder<R>::loadResource(const std::string& resourceFilename
 		it = createResource(resourceFilename);
 
 	if(it->second.loaded == false)
-		it->second.loaded = loadFromFile(resourceFilename, *(it->second.resource));
+		it->second.loaded = load(resourceFilename, *(it->second.resource));
 
 	loaded = it->second.loaded;
 
@@ -95,7 +98,7 @@ auto TemplateResourceHolder<R>::loadResource(const std::string& resourceFilename
 }
 
 template<class R>
-auto TemplateResourceHolder<R>::loadAllResources()
+auto ResourceHolder<R>::loadAllResources()
 	-> bool
 {
 	bool succeed = true;
@@ -103,7 +106,7 @@ auto TemplateResourceHolder<R>::loadAllResources()
 	for(auto& resource : m_resources)
 	{
 		if(resource.second.loaded == false)
-			resource.second.loaded = loadFromFile(resource.first, *(resource.second.resource));
+			resource.second.loaded = load(resource.first, *(resource.second.resource));
 
 		succeed &= resource.second.loaded;
 	}
@@ -112,12 +115,12 @@ auto TemplateResourceHolder<R>::loadAllResources()
 }
 
 template<class R>
-auto TemplateResourceHolder<R>::loadFromFile(const std::string& resourceFilename, R& resource)
+auto ResourceHolder<R>::load(const std::string& resourceFilename, R& resource)
 	-> bool
 {
-	return resource.loadFromFile(resourceFilename);
+	return resource.load(resourceFilename);
 }
 
 } // namespace mge
 
-#endif // TEMPLATERESOURCEHOLDER_INL_
+#endif // RESOURCEHOLDER_INL_

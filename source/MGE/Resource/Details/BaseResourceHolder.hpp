@@ -1,5 +1,5 @@
 //============================================================================
-// Name        : AbstractResourceHolder.hpp
+// Name        : BaseResourceHolder.hpp
 // Author      : Julien Combattelli
 // EMail       : julien.combattelli@hotmail.com
 // Date		   : Jul 3, 2016
@@ -9,21 +9,21 @@
 // Description : 
 //============================================================================
 
-#ifndef ABSTRACTRESOURCEHOLDER_HPP_
-#define ABSTRACTRESOURCEHOLDER_HPP_
+#ifndef BASERESOURCEHOLDER_HPP_
+#define BASERESOURCEHOLDER_HPP_
 
 #include <string>
 
 namespace mge
 {
 
-class AbstractResourceHolder
+class BaseResourceHolder
 {
 public:
-	AbstractResourceHolder(const std::string& id) : m_id(id) {}
-	AbstractResourceHolder(const AbstractResourceHolder&) = delete;
-	AbstractResourceHolder& operator=(const AbstractResourceHolder&) = delete;
-	virtual ~AbstractResourceHolder() = default;
+	BaseResourceHolder(const std::string& id) : m_id(id) {}
+	BaseResourceHolder(const BaseResourceHolder&) = delete;
+	BaseResourceHolder& operator=(const BaseResourceHolder&) = delete;
+	virtual ~BaseResourceHolder() = default;
 
 	std::string getId() const { return m_id; }
 
@@ -40,4 +40,4 @@ private:
 
 } // namespace mge
 
-#endif // ABSTRACTRESOURCEHOLDER_HPP_
+#endif // BASERESOURCEHOLDER_HPP_

@@ -19,33 +19,66 @@ namespace mge
 
 template<class resourceType>
 auto ResourceManager::getHolder() const
-	-> TemplateResourceHolder<resourceType>*
+	-> ResourceHolder<resourceType>*
 {
-	TemplateResourceHolder<resourceType>* handler = nullptr;
+	ResourceHolder<resourceType>* holder = nullptr;
 
 	std::string typeName(typeid(resourceType).name());
 
 	auto it = m_holders.find(typeName);
 
 	if(it != m_holders.end())
-		handler = static_cast<TemplateResourceHolder<resourceType>*>(it->second.get());
+		holder = static_cast<ResourceHolder<resourceType>*>(it->second.get());
 
-	if(handler == nullptr) // error : handler not find
-		std::cout << "Holder \"" << typeName << "\" not find.\n"
-				  << "Don't you forget to register the holder in mge::Engine::init() ?" << std::endl;
+	if(holder == nullptr) // error : handler not find
+		throw std::runtime_error(
+			"Holder \"" + typeName + "\" not find.\n\n"+
+			"Don't you forget to register the holder in mge::Engine::init() ?\n\n"+
+			"You also can use getHolderOrCreate() instead of getHolder().");
 
-	return handler;
+	return holder;
 }
 
-template<class handlerType>
-void ResourceManager::registerHolder()
+template<class resourceType>
+auto ResourceManager::getHolderOrCreate()
+	-> ResourceHolder<resourceType>*
 {
-	std::string typeName(typeid(typename handlerType::ResourceType).name());
+	ResourceHolder<resourceType>* holder = nullptr;
+
+	std::string typeName(typeid(resourceType).name());
+
+	auto it = m_holders.find(typeName);
+
+	if(it != m_holders.end())
+		holder = static_cast<ResourceHolder<resourceType>*>(it->second.get());
+	else
+	{
+		RegistationResult registation = registerHolder<ResourceHolder<resourceType>>();
+		holder = static_cast<ResourceHolder<resourceType>*>(registation.first->second.get());
+	}
+
+	if(holder == nullptr) // error : handler not find
+		throw std::runtime_error(
+			"Holder \"" + typeName + "\" not find.\n\n"+
+			"Don't you forget to register the holder in mge::Engine::init() ?\n\n"+
+			"You also can use getHolderOrCreate() instead of getHolder().");
+
+	return holder;
+}
+
+
+template<class holderType>
+ResourceManager::RegistationResult ResourceManager::registerHolder()
+{
+	std::string typeName(typeid(typename holderType::ResourceType).name());
 
 	if(m_holders.find(typeName) == m_holders.end())
-		m_holders.emplace(typeName, std::make_unique<handlerType>());
+		return m_holders.emplace(typeName, std::make_unique<holderType>());
 	else // error : handler already registered
+	{
 		std::cout << "handler already registered" << std::endl;
+		return {m_holders.end(),false};
+	}
 }
 
 } // namespace mge

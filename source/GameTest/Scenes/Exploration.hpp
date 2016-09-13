@@ -2,8 +2,7 @@
 #define EXPLORATION_HPP_INCLUDED
 
 #include <MGE/Core/Scene/Scene.hpp>
-#include <MGE/Resource/TemplateResource.hpp>
-//#include <Engine/Graphics/Map/TileMapDrawer.hpp>
+#include <MGE/Resource/Resource.hpp>
 #include <MUL/SFE/AnimatedSprite.hpp>
 
 namespace rpg

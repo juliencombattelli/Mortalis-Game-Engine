@@ -13,7 +13,7 @@
 #define DUMMYSCENE_HPP_
 
 #include <MGE/Core/Scene/Scene.hpp>
-#include <MGE/Resource/TemplateResource.hpp>
+#include <MGE/Resource/Resource.hpp>
 #include <SFML/Graphics/Text.hpp>
 
 namespace mge
@@ -23,7 +23,7 @@ class DummyScene : public Scene
 {
 public:
 
-	DummyScene(const ResourceManager& resourceManager);
+	DummyScene(ResourceManager& resourceManager);
 	virtual ~DummyScene();
 
 	virtual void handleEvent(sf::Event& event, const Keyboard& keyboard) final;
