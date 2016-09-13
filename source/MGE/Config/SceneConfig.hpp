@@ -15,12 +15,13 @@
 // Replace this include with yours
 #include <MGE/Core/Scene/DummyScene.hpp>
 #include <GameTest/Scenes/SceneMap.hpp>
+#include <GameTest/Scenes/SimuScene.hpp>
 
 namespace mge
 {
 
 // Replace with your custom initial scene class and include it
-using InitialScene = game::SceneMap;//DummyScene;
+using InitialScene = game::SimuScene;//DummyScene;
 
 } // namespace mge
 
