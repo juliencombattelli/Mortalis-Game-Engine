@@ -1,7 +1,9 @@
 # Mortalis-Game-Engine
 
-This is an open source Game Engine Project.
+This is an open source C++ Game Engine Project, based on SFML library.
 
 The goal of this project is both create a 2D RPG game (like Pokemon, Zelda or Final Fantasy) and a reusable game engine for any 2D game.
 
-I use C++ progamming language, with the new functionnalities offer by C++17 (known as C++1z), and the SFML library.
+To compile this project, you could use any compiler as long as they provide C++14 support (like GCC5, may works with GCC4.9). You also need the SFML 2.4 library.
+
+A use Eclipse CDT Neon (4.6) as IDE and its git built-in plugin to push code to Github.
