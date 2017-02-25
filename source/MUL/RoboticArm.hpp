@@ -13,6 +13,7 @@
 #define ROBOTIC_ARM_HPP_
 
 #include <MUL/SFE/ConnectedRodShape.hpp>
+#include <cmath>
 
 static const float to_rad = 3.14159265359f / 180.f;
 
