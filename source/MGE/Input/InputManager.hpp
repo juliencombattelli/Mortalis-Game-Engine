@@ -10,6 +10,7 @@
 
 #include <MGE/Input/ActionFSM.hpp>
 #include <MGE/Input/Controller.hpp>
+#include <MGE/Input/DPad.hpp>
 #include <memory>
 #include <map>
 #include <vector>
@@ -25,11 +26,15 @@ public:
 
 	InputManager();
 
+	void init();
+
 	void update();
 
 	bool isSelected(Action action) const;
 	bool isSelectedOnce(Action action) const;
 	bool isSelectedCont(Action action) const;
+
+	DPad m_dpad;
 
 private:
 

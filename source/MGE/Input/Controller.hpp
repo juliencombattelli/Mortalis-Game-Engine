@@ -11,6 +11,7 @@
 #include <MGE/Config/ActionConfig.hpp>
 #include <MGE/Input/Control.hpp>
 #include <map>
+#include <memory>
 
 namespace mge
 {
@@ -23,7 +24,7 @@ public:
 
 	void rebindAction(Action action, int key)
 	{
-		m_actionMap[action] = key;
+		//m_actionMap[action] = key;
 	}
 
 	virtual void update()
@@ -35,7 +36,7 @@ public:
 	{
 		try
 		{
-			return m_actionMap.at(action)();
+			return m_actionMap.at(action)->getState();
 		}
 		catch(...)
 		{
@@ -45,7 +46,7 @@ public:
 
 protected:
 
-	std::map<Action,Control> m_actionMap;
+	std::map<Action,std::unique_ptr<Control>> m_actionMap;
 };
 
 } // namespace mge

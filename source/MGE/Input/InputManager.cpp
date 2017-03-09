@@ -12,7 +12,13 @@
 namespace mge
 {
 
-InputManager::InputManager()
+InputManager::InputManager() :
+	m_dpad({Action::moveUp, Action::moveDown, Action::moveRight, Action::moveLeft})
+{
+
+}
+
+void InputManager::init()
 {
 	m_controllers.emplace_back(std::make_unique<KeyboardController>());
 	m_controllers.emplace_back(std::make_unique<Dualshock4Controller>());
@@ -35,6 +41,13 @@ void InputManager::update()
 		}
 		actionFsmPair.second.update(isActionSelected);
 	}
+
+	std::map<Action,bool> mapForUpdate;
+
+	for(auto& action : directionalActions)
+		mapForUpdate[action] = isSelected(action);
+
+	m_dpad.update(mapForUpdate);
 }
 
 bool InputManager::isSelected(Action action) const

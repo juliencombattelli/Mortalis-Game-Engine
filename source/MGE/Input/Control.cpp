@@ -11,7 +11,7 @@
 
 namespace mge
 {
-
+/*
 Control::Control() :
 	m_id(-1),
 	m_controllerId(-1)
@@ -19,15 +19,15 @@ Control::Control() :
 
 }
 
-Control::Control(int buttonId) :
+Control::Control(int buttonId, std::function<bool(const Control&)> pred) :
 	m_id(buttonId),
 	m_controllerId(-1),
-	m_predicate( Control::Button )
+	m_predicate(pred)
 {
 
 }
 
-Control::Control(int axeId, int controllerId, std::function<bool(const Control&)> pred) :
+Control::Control(int controllerId, int axeId, std::function<bool(const Control&)> pred) :
 	m_id(axeId),
 	m_controllerId(controllerId),
 	m_predicate(pred)
@@ -43,9 +43,20 @@ bool Control::operator()() const
 		return false;
 }
 
-bool Control::Button(const Control& ctrl)
+bool Control::KeyboardButton(const Control& ctrl)
 {
-	return sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(ctrl.m_id));
+	if(ctrl.m_id != -1)
+		return sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(ctrl.m_id));
+	else
+		return false;
+}
+
+bool Control::JoystickButton(const Control& ctrl)
+{
+	if(ctrl.m_controllerId != -1 && ctrl.m_id != -1)
+		return sf::Joystick::isButtonPressed(ctrl.m_controllerId, ctrl.m_id);
+	else
+		return false;
 }
 
 bool Control::NegativAxe(const Control& ctrl)
@@ -59,7 +70,7 @@ bool Control::PositivAxe(const Control& ctrl)
 	float axeValue = sf::Joystick::getAxisPosition(ctrl.m_controllerId, static_cast<sf::Joystick::Axis>(ctrl.m_id));
 	return (50 < axeValue && axeValue < 100) ? true : false;
 }
-
+*/
 } // namespace mge
 
 

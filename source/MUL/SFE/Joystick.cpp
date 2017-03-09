@@ -20,7 +20,7 @@ unsigned int scanJoysticks(unsigned int vendorId, unsigned int productId)
 	std::vector<unsigned int> joysticksId;
 
 	for(unsigned int i = 0 ; i < sf::Joystick::Count ; i++)
-		if(sf::Joystick::isConnected(i) and sf::Joystick::getIdentification(i).vendorId == vendorId and sf::Joystick::getIdentification(i).productId == productId)
+		if(sf::Joystick::isConnected(i)/* and sf::Joystick::getIdentification(i).vendorId == vendorId and sf::Joystick::getIdentification(i).productId == productId*/)
 			return i;
 	return sf::Joystick::Count;
 }

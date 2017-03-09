@@ -12,14 +12,12 @@ namespace mge
 
 Dualshock4Controller::Dualshock4Controller() : m_controllerID(mul::sfe::scanJoysticks(VendorID, ProductID))
 {
-	m_actionMap = {
-		{Action::pause,		Control(ButtonPS)},
-		{Action::accept,	Control(ButtonCross)},
-		{Action::moveUp,	Control(m_controllerID, sf::Joystick::Y, Control::PositivAxe)},
-		{Action::moveDown,	Control(m_controllerID, sf::Joystick::Y, Control::NegativAxe)},
-		{Action::moveLeft,	Control(m_controllerID, sf::Joystick::X, Control::PositivAxe)},
-		{Action::moveRight,	Control(m_controllerID, sf::Joystick::X, Control::NegativAxe)},
-	};
+	m_actionMap[Action::pause] = std::make_unique<JoystickButton>(m_controllerID, ButtonPS);
+	m_actionMap[Action::accept] = std::make_unique<JoystickButton>(m_controllerID, ButtonCross);
+	m_actionMap[Action::moveUp] = std::make_unique<NegativAxe>(m_controllerID, sf::Joystick::Y);
+	m_actionMap[Action::moveDown] = std::make_unique<PositivAxe>(m_controllerID, sf::Joystick::Y);
+	m_actionMap[Action::moveLeft] = std::make_unique<NegativAxe>(m_controllerID, sf::Joystick::X);
+	m_actionMap[Action::moveRight] = std::make_unique<PositivAxe>(m_controllerID, sf::Joystick::X);
 }
 
 Dualshock4Controller::~Dualshock4Controller()

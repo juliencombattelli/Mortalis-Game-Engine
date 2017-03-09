@@ -14,14 +14,12 @@ namespace mge
 
 KeyboardController::KeyboardController()
 {
-	m_actionMap = {
-		{Action::pause,		Control(sf::Keyboard::P)},
-		{Action::accept,	Control(sf::Keyboard::A)},
-		{Action::moveUp,	Control(sf::Keyboard::Up)},
-		{Action::moveDown,	Control(sf::Keyboard::Down)},
-		{Action::moveLeft,	Control(sf::Keyboard::Left)},
-		{Action::moveRight,	Control(sf::Keyboard::Right)},
-	};
+	m_actionMap[Action::pause] = std::make_unique<KeyboardButton>(sf::Keyboard::P);
+	m_actionMap[Action::accept] = std::make_unique<KeyboardButton>(sf::Keyboard::A);
+	m_actionMap[Action::moveUp] = std::make_unique<KeyboardButton>(sf::Keyboard::Up);
+	m_actionMap[Action::moveDown] = std::make_unique<KeyboardButton>(sf::Keyboard::Down);
+	m_actionMap[Action::moveLeft] = std::make_unique<KeyboardButton>(sf::Keyboard::Left);
+	m_actionMap[Action::moveRight] = std::make_unique<KeyboardButton>(sf::Keyboard::Right);
 }
 
 KeyboardController::~KeyboardController()
