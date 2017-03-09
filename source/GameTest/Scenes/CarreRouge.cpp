@@ -1,5 +1,5 @@
 #include <GameTest/Scenes/CarreRouge.hpp>
-#include <MGE/Input/Input.hpp>
+#include <MGE/Input/InputManager.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
 namespace rpg
@@ -18,7 +18,7 @@ CarreRouge::~CarreRouge()
 
 }
 
-void CarreRouge::handleEvent(sf::Event& event, const mge::Keyboard& keyboard)
+void CarreRouge::handleEvent(sf::Event& event, const mge::InputManager& keyboard)
 {
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::P))
     {

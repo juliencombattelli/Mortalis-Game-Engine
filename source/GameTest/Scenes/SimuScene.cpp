@@ -28,7 +28,7 @@ SimuScene::SimuScene(mge::ResourceManager& resourceManager) :
 	arm.rotate(0,45);
 }
 
-void SimuScene::handleEvent(sf::Event& event, const mge::Keyboard& keyboard)
+void SimuScene::handleEvent(sf::Event& event, const mge::InputManager& keyboard)
 {
 
 }

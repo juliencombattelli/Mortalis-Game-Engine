@@ -12,7 +12,7 @@
 #ifndef SCENE_HPP_
 #define SCENE_HPP_
 
-#include <MGE/Input/Input.hpp>
+#include <MGE/Input/InputManager.hpp>
 #include <SFML/Graphics.hpp>
 
 namespace mge
@@ -30,7 +30,7 @@ public:
 	Scene& operator=(const Scene&) = delete;
     virtual ~Scene() = default;
 
-    virtual void handleEvent(sf::Event& event, const Keyboard& keyboard) = 0;
+    virtual void handleEvent(sf::Event& event, const InputManager& keyboard) = 0;
     virtual void update(float elapsedTime) = 0;
     virtual void draw(sf::RenderTarget& window) = 0;
 

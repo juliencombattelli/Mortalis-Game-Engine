@@ -142,7 +142,7 @@ void Engine::handleEvent(Scene& scene)
         }
     }
 
-    scene.handleEvent(event, m_keyboard);
+    scene.handleEvent(event, m_inputManager);
 }
 
 void Engine::gameLoop()
@@ -156,7 +156,7 @@ void Engine::gameLoop()
     {
         Scene& scene = m_sceneManager.getActiveState();
 
-		m_keyboard.update();
+		m_inputManager.update();
 
 		handleEvent(scene);
 

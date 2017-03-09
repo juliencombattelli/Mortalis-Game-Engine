@@ -33,21 +33,21 @@ SceneMap::SceneMap(mge::ResourceManager& resourceManager) :
 	licenseFile->close();
 }
 
-void SceneMap::handleEvent(sf::Event& event, const mge::Keyboard& keyboard)
+void SceneMap::handleEvent(sf::Event& event, const mge::InputManager& keyboard)
 {
-    if (keyboard.isKeyPressed(mge::Action::accept))
+    if (keyboard.isSelected(mge::Action::accept))
         m_heros.run();
     else
         m_heros.walk();
 
-    if (keyboard.isDKeyPressed(mge::Action::moveUp))
+   /* if (keyboard.isDKeyPressed(mge::Action::moveUp))
         m_heros.moveUp();
     if (keyboard.isDKeyPressed(mge::Action::moveDown))
         m_heros.moveDown();
     if (keyboard.isDKeyPressed(mge::Action::moveLeft))
         m_heros.moveLeft();
     if (keyboard.isDKeyPressed(mge::Action::moveRight))
-        m_heros.moveRight();
+        m_heros.moveRight();*/
 }
 
 void SceneMap::update(float elapsedTime)

@@ -89,7 +89,7 @@ public:
 	SimuScene(mge::ResourceManager& resourceManager);
     virtual ~SimuScene() = default;
 
-    virtual void handleEvent(sf::Event& event, const mge::Keyboard& keyboard) final;
+    virtual void handleEvent(sf::Event& event, const mge::InputManager& keyboard) final;
     virtual void update(float elapsedTime) final;
     virtual void draw(sf::RenderTarget& window) final;
 

@@ -27,7 +27,7 @@ DummyScene::~DummyScene()
 
 }
 
-void DummyScene::handleEvent(sf::Event& event, const Keyboard& keyboard)
+void DummyScene::handleEvent(sf::Event& event, const InputManager& keyboard)
 {
 
 }

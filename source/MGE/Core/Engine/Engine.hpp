@@ -15,7 +15,7 @@
 #include <MGE/Config/CompilerConfig.hpp>
 #include <MGE/Core/Scene/SceneManager.hpp>
 #include <MGE/Core/Status/Status.hpp>
-#include <MGE/Input/Input.hpp>
+#include <MGE/Input/InputManager.hpp>
 #include <MGE/Resource/ResourceManager.hpp>
 #include <MUL/Event/Event.hpp>
 
@@ -52,7 +52,7 @@ private:
 
     ResourceManager m_resourceManager;
     SceneManager m_sceneManager;
-    Keyboard m_keyboard;
+    InputManager m_inputManager;
 
     bool m_isRunning;
     Status m_exitStatus;

@@ -12,7 +12,7 @@ public:
     CarreRouge(mge::ResourceManager& resourceManager);
     virtual ~CarreRouge();
 
-    virtual void handleEvent(sf::Event& event, const mge::Keyboard& keyboard);
+    virtual void handleEvent(sf::Event& event, const mge::InputManager& keyboard);
     virtual void update(float elapsedTime);
     virtual void draw(sf::RenderTarget& window);
 
