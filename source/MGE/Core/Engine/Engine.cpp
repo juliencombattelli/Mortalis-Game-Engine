@@ -74,7 +74,7 @@ Status Engine::run()
 void Engine::openErrorWindow(Status status, const std::string& errorMessage)
 {
 	m_window.close();
-	m_window.create(sf::VideoMode(400,100), "Error", sf::Style::Close);
+	m_window.create(sf::VideoMode(600,100), "Error", sf::Style::Close);
 	m_isRunning = false;
 	FontResource font("resources/NotoSans-Regular.ttf",m_resourceManager);
 	sf::Text errorText(errorMessage, font.get(), 20);
@@ -113,6 +113,7 @@ void Engine::init()
 		std::cout << "error loading icon" << std::endl;
 	m_window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());*/
 	//m_window.setIcon(gimp_image.width,  gimp_image.height,  gimp_image.pixel_data);
+	m_inputManager.init();
 }
 
 void Engine::handleEvent(Scene& scene)

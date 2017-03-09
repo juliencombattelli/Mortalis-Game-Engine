@@ -16,7 +16,7 @@
 #include <stack>
 #include <iostream>
 #include <cmath>
-
+/*
 int main()
 {
 	sf::RenderWindow window({800,600},"test");
@@ -53,7 +53,7 @@ int main()
 		window.draw(a);
 		window.display();
 	}
-}
+}*/
 
 /*
 //============================================================================
@@ -126,10 +126,11 @@ int main()
 
 	return 0;
 }
+
 */
 
-/*
 #include <MGE/Core/Engine/Engine.hpp>
+#include <MUL/SFE/Joystick.hpp>
 
 int main()
 {
@@ -137,4 +138,5 @@ int main()
     mge::Status status = engine.run();
 
     return static_cast<int>(status);
-}*/
+}
+

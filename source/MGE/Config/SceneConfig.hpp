@@ -21,7 +21,7 @@ namespace mge
 {
 
 // Replace with your custom initial scene class and include it
-using InitialScene = game::SimuScene;//DummyScene;
+using InitialScene = game::SceneMap;//DummyScene;
 
 } // namespace mge
 

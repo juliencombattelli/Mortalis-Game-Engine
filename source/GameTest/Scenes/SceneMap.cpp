@@ -24,7 +24,7 @@ SceneMap::SceneMap(mge::ResourceManager& resourceManager) :
 		m_map(resourceManager, mge::TilesetDirectory, mge::TileSize),
 		m_actor1Texture("resources/Actor1.png", resourceManager)
 {
-    m_map.load(map0);
+    m_map.load(map1);
 
     m_heros.init(m_actor1Texture.get());
 
@@ -40,14 +40,14 @@ void SceneMap::handleEvent(sf::Event& event, const mge::InputManager& keyboard)
     else
         m_heros.walk();
 
-   /* if (keyboard.isDKeyPressed(mge::Action::moveUp))
+   if (keyboard.m_dpad.isPressed(mge::Action::moveUp))
         m_heros.moveUp();
-    if (keyboard.isDKeyPressed(mge::Action::moveDown))
+    if (keyboard.m_dpad.isPressed(mge::Action::moveDown))
         m_heros.moveDown();
-    if (keyboard.isDKeyPressed(mge::Action::moveLeft))
+    if (keyboard.m_dpad.isPressed(mge::Action::moveLeft))
         m_heros.moveLeft();
-    if (keyboard.isDKeyPressed(mge::Action::moveRight))
-        m_heros.moveRight();*/
+    if (keyboard.m_dpad.isPressed(mge::Action::moveRight))
+        m_heros.moveRight();
 }
 
 void SceneMap::update(float elapsedTime)
