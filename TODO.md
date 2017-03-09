@@ -11,7 +11,8 @@
 
 #### Input module
 
-- [ ] add an actionManager use isActionRequired... functions => user will use it instead of mge::Keyboard
+- [x] add an inputManager which use isActionSelected => user will use it instead of mge::Keyboard
+- [ ] change DPad methods names
 
 #### Internal Event module
 
