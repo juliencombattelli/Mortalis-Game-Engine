@@ -26,13 +26,14 @@ public:
 	DummyScene(ResourceManager& resourceManager);
 	virtual ~DummyScene();
 
-	virtual void handleEvent(sf::Event& event, const InputManager& keyboard) final;
+	virtual void handleEvent(sf::Event& event, const InputManager& input) final;
 	virtual void update(float elapsedTime) final;
 	virtual void draw(sf::RenderTarget& window) final;
 
 	virtual void pause() final;
 	virtual void resume() final;
 
+	static constexpr auto DummyText = "\nThis is a dummy scene.\nYou probably forget to set InitialScene typedef in MGE/Config/SceneConfig.hpp.";
 protected:
 
 	FontResource m_font;

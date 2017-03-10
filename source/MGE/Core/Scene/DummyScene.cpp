@@ -16,8 +16,7 @@ namespace mge
 
 DummyScene::DummyScene(ResourceManager& resourceManager) :
 	m_font("resources/NotoSans-Regular.ttf", resourceManager),
-	m_text("\nThis is a dummy scene.\nYou probably forget to set InitialScene typedef in MGE/Config/SceneConfig.hpp.",
-			m_font.get(), 20)
+	m_text(DummyText, m_font.get(), 20)
 {
 
 }
@@ -27,7 +26,7 @@ DummyScene::~DummyScene()
 
 }
 
-void DummyScene::handleEvent(sf::Event& event, const InputManager& keyboard)
+void DummyScene::handleEvent(sf::Event& event, const InputManager& input)
 {
 
 }

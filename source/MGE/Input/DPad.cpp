@@ -61,7 +61,7 @@ void DPad::update(const std::map<Action, bool>& dKeysState)
     enableHighestPriorityKey();
 }
 
-bool DPad::isPressed(Action action) const
+bool DPad::isSelected(Action action) const
 {
 	auto it = m_DKeys.find(action);
 	if(it != m_DKeys.end())

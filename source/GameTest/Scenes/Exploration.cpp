@@ -29,7 +29,7 @@ Exploration::~Exploration()
 
 }
 
-void Exploration::handleEvent(sf::Event& event, const mge::InputManager& keyboard)
+void Exploration::handleEvent(sf::Event& event, const mge::InputManager& input)
 {
     /*if (keyboard.isKeyPressed(mge::Action::accept))
         mHeros.run();

@@ -30,7 +30,7 @@ public:
 	Scene& operator=(const Scene&) = delete;
     virtual ~Scene() = default;
 
-    virtual void handleEvent(sf::Event& event, const InputManager& keyboard) = 0;
+    virtual void handleEvent(sf::Event& event, const InputManager& input) = 0;
     virtual void update(float elapsedTime) = 0;
     virtual void draw(sf::RenderTarget& window) = 0;
 

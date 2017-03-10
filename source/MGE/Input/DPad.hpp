@@ -30,7 +30,7 @@ public:
 
     void update(const std::map<Action, bool>& dKeysState);
 
-    bool isPressed(Action action) const;
+    bool isSelected(Action action) const;
 
 private:
 

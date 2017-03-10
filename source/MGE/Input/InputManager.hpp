@@ -34,12 +34,13 @@ public:
 	bool isSelectedOnce(Action action) const;
 	bool isSelectedCont(Action action) const;
 
-	DPad m_dpad;
+	bool isDPadSelected(Action action) const;
 
 private:
 
 	std::map<Action, ActionFSM> m_fsmMap;
 	std::vector<std::unique_ptr<Controller>> m_controllers;
+	DPad m_dpad;
 };
 
 } // namespace mge

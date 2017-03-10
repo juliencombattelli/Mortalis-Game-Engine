@@ -65,5 +65,10 @@ bool InputManager::isSelectedCont(Action action) const
 	return m_fsmMap.at(action).isSelectedCont();
 }
 
+bool InputManager::isDPadSelected(Action action) const
+{
+	return m_dpad.isSelected(action);
+}
+
 } // namespace mge
 

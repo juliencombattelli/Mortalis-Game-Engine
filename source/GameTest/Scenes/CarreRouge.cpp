@@ -18,7 +18,7 @@ CarreRouge::~CarreRouge()
 
 }
 
-void CarreRouge::handleEvent(sf::Event& event, const mge::InputManager& keyboard)
+void CarreRouge::handleEvent(sf::Event& event, const mge::InputManager& input)
 {
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::P))
     {

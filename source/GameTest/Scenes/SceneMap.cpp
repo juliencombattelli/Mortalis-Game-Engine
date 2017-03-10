@@ -24,7 +24,7 @@ SceneMap::SceneMap(mge::ResourceManager& resourceManager) :
 		m_map(resourceManager, mge::TilesetDirectory, mge::TileSize),
 		m_actor1Texture("resources/Actor1.png", resourceManager)
 {
-    m_map.load(map1);
+    m_map.load(map0);
 
     m_heros.init(m_actor1Texture.get());
 
@@ -33,20 +33,20 @@ SceneMap::SceneMap(mge::ResourceManager& resourceManager) :
 	licenseFile->close();
 }
 
-void SceneMap::handleEvent(sf::Event& event, const mge::InputManager& keyboard)
+void SceneMap::handleEvent(sf::Event& event, const mge::InputManager& input)
 {
-    if (keyboard.isSelected(mge::Action::accept))
+    if (input.isSelected(mge::Action::accept))
         m_heros.run();
     else
         m_heros.walk();
 
-   if (keyboard.m_dpad.isPressed(mge::Action::moveUp))
+    if (input.isDPadSelected(mge::Action::moveUp))
         m_heros.moveUp();
-    if (keyboard.m_dpad.isPressed(mge::Action::moveDown))
+    if (input.isDPadSelected(mge::Action::moveDown))
         m_heros.moveDown();
-    if (keyboard.m_dpad.isPressed(mge::Action::moveLeft))
+    if (input.isDPadSelected(mge::Action::moveLeft))
         m_heros.moveLeft();
-    if (keyboard.m_dpad.isPressed(mge::Action::moveRight))
+    if (input.isDPadSelected(mge::Action::moveRight))
         m_heros.moveRight();
 }
 

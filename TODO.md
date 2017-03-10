@@ -12,7 +12,7 @@
 #### Input module
 
 - [x] add an inputManager which use isActionSelected => user will use it instead of mge::Keyboard
-- [ ] change DPad methods names
+- [x] change DPad methods names and set m_dpad private in InputManager class
 
 #### Internal Event module
 
@@ -31,7 +31,7 @@
 
 #### Miscellaneous
 
-#### Phisics module
+#### Physics module
 
 - [ ] add a tile movement for Player instead of a pixel movement
 - [ ] add collision detection class

@@ -29,7 +29,7 @@ public:
 	SceneMap(mge::ResourceManager& resourceManager);
     virtual ~SceneMap() = default;
 
-    virtual void handleEvent(sf::Event& event, const mge::InputManager& keyboard) final;
+    virtual void handleEvent(sf::Event& event, const mge::InputManager& input) final;
     virtual void update(float elapsedTime) final;
     virtual void draw(sf::RenderTarget& window) final;
 
