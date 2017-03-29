@@ -31,12 +31,6 @@ Engine::~Engine()
 
 }
 
-void Engine::quit(mul::Sender& sender, const mul::Event& event)
-{
-	const QuitEvent* quitEvent = static_cast<const QuitEvent*>(&event);
-	quit(quitEvent->exitStatus);
-}
-
 void Engine::quit(Status status)
 {
 	m_exitStatus = status;

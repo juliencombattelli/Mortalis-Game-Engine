@@ -9,8 +9,8 @@
 // Description : It provides an observer implementation to handling events
 //============================================================================
 
-#ifndef MUL_EVENT_HPP_
-#define MUL_EVENT_HPP_
+#ifndef EVENT_HPP_
+#define EVENT_HPP_
 
 #include <vector>
 #include <unordered_map>
@@ -50,23 +50,17 @@ class Receiver
 public:
 	virtual ~Receiver() {}
 	virtual NotifyAction onNotify(Sender& sender, Event const& event);
-	template<typename T>
-	void addEventHandler(std::function<void(Sender&, Event const&)> handler);
+
+	template<typename TEvent, typename TMethod, typename TObject>
+	void addEventHandler(TMethod&& method, TObject&& obj)
+	{
+		handlers[typeid(TEvent)] = std::bind(method, obj, std::placeholders::_1, std::placeholders::_2);
+	}
 
 private:
 	std::unordered_map<std::type_index,std::function<void(Sender&, Event const&)>> handlers;
 };
 
-///////////////////////////////////////////////////////////////////////////////
-// Templates implementation
-///////////////////////////////////////////////////////////////////////////////
-
-template<typename T>
-void Receiver::addEventHandler(std::function<void(Sender&, Event const&)> handler)
-{
-	handlers[typeid(T)] = handler;
-}
-
 } // namespace mul
 
-#endif // MUL_EVENT_HPP_
+#endif // EVENT_HPP_

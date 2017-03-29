@@ -17,7 +17,6 @@
 #include <MGE/Core/Status/Status.hpp>
 #include <MGE/Input/InputManager.hpp>
 #include <MGE/Resource/ResourceManager.hpp>
-#include <MUL/Event/Event.hpp>
 
 #include <SFML/Graphics.hpp>
 
@@ -26,7 +25,7 @@ namespace mge
 
 class IState;
 
-class Engine : mul::Receiver
+class Engine
 {
 public:
 
@@ -36,7 +35,6 @@ public:
     ~Engine();
 
     bool isRunning() const { return m_isRunning; }
-    void quit(mul::Sender& sender, const mul::Event& event);
     Status run();
 
     void openErrorWindow(Status status, const std::string& errorMessage);

@@ -13,11 +13,10 @@
 #define EVENT_HPP_
 
 #include <MGE/Core/Status/Status.hpp>
-#include <MUL/Event/Event.hpp>
 
 namespace mge
 {
-
+/*
 struct QuitEvent : public mul::Event
 {
 	QuitEvent(Status exitCode) : exitStatus(exitCode) {}
@@ -32,7 +31,7 @@ struct ResourceHandlerRequestEvent : public mul::Event
 	virtual ~ResourceHandlerRequestEvent() {}
 	std::string handlerID;
 };
-
+*/
 }
 
 #endif // EVENT_HPP_
