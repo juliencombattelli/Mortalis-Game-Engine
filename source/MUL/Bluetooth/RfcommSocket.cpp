@@ -4,7 +4,7 @@
 // EMail       : julien.combattelli@hotmail.com
 // Date		   : 1 mai 2017
 // Version     : 1.0.0
-// Copyright   : This file is part of <ProjectName> project which is released under
+// Copyright   : This file is part of MUL project which is released under
 //               MIT license. See file LICENSE.txt for full license details
 // Description :
 //============================================================================
