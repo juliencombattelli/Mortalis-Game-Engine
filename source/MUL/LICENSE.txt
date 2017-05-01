@@ -1,5 +1,5 @@
 All files provided by the Mortalis Game Engine (MGE) project and Mortalis 
-Utility Libraries (MUL) project are released under MIT License.
+Utility Libraries (MUL) projects are released under MIT License.
 
 Copyright (c) 2016 Julien Combattelli
 
