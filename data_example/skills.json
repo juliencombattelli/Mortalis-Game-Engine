@@ -1,0 +1,58 @@
+///////////////////////////////////////////////////////////////////////////////
+// Field type
+
+// 	value
+	"fieldname" : <value>
+
+// 	list
+	"fieldname" : <value>
+or
+	"fieldname" : [<value0>, ..., <valuen>]
+
+///////////////////////////////////////////////////////////////////////////////
+// Possible fields and syntax:
+
+//	name : value
+	"name" : "string"
+
+//	type : value
+	"type" : "string" // int maybe ?
+
+//	formula : list
+	"formula" : "string"
+	"formula" : ["str0", ..., "strn"]
+
+//	formulae
+
+//	status
+//	when
+//	target
+//	modifiers
+"modifiers" : {/* one modifier */}
+"modifiers" : [{/* mod0 */}, ...,{modn}]
+
+
+
+{
+	"skills":
+	[
+		{
+			"name": "Attack",
+      		"type": "Active",
+      		"formulae":
+      		[
+				// formulae are executed when the corresponding conditions are true
+				// when one test is successfull, the others formulae are skipped
+				// if all test fail, nothing is executed
+        		{"formula": "f1"            ,	"when": "cond1"					},
+        		{"formula": ["f21", "f22"]	,   "when": "cond2"					},
+        		{"formula": "f3"			,   "when": ["cond31", "cond32"]	},
+       	 		{"formula": "f4"                                				}
+      		]
+    	},
+    	{
+      		"name": "Charge"
+    	}
+  	]
+}
+
