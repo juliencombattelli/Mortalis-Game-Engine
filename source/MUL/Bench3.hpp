@@ -68,6 +68,7 @@ public:
 		stat = bench(iterations, functor,  std::forward(args)...);
 		if(m_endlog_enabled)
 			logger.logEnd(name, iterations, stat);
+		return stat;
 	}
 
 	template<typename TF, typename... TArgs>
@@ -79,6 +80,7 @@ public:
 		stat = bench(iterations, functor,  std::forward(args)...);
 		if(m_endlog_enabled)
 			logger.logEnd(name, iterations, stat);
+		return stat;
 	}
 
 	void enable_log(bool enabled) { enable_startlog(enabled); enable_endlog(enabled); }
