@@ -1,4 +1,4 @@
-# Mortalis-Game-Engine
+# Mortalis Game Engine
 
 This is an open source C++ Game Engine Project, based on SFML library.
 
