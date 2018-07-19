@@ -31,6 +31,8 @@
 
 #### Miscellaneous
 
+- [ ] rename "manager" classes (i.e. InputProvider, ResourceCache, SceneStack, etc)
+
 #### Physics module
 
 - [ ] add a tile movement for Player instead of a pixel movement
