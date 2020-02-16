@@ -1,2 +1,4 @@
 BasedOnStyle: WebKit
 AllowShortFunctionsOnASingleLine: None
+FixNamespaceComments: true
+NamespaceIndentation: None
