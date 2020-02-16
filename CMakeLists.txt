@@ -3,7 +3,7 @@ project(mge-framework)
 
 add_subdirectory(external)
 
-option(WITH_CLANG_TIDY "Enablr clang-tidy static analysis builds" OFF)
+option(WITH_CLANG_TIDY "Enable clang-tidy static analysis builds" OFF)
 
 if(WITH_CLANG_TIDY)
     include(cmake/Scripts/ClangTidy.cmake)
