@@ -1,0 +1,1 @@
+Checks: '*,-abseil*,-android*,-fuchsia*,-modernize-use-trailing-return-type*,-zircon*,-objc*,-mpi*,-openmp*'
