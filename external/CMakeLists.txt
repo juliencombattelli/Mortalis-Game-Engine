@@ -16,4 +16,9 @@ FetchContent_Declare(googletest
     GIT_TAG        release-1.10.0
 )
 
-FetchContent_MakeAvailable(fmt spdlog googletest)
+FetchContent_Declare(entt
+    GIT_REPOSITORY https://github.com/skypjack/entt.git
+    GIT_TAG        v3.3.0
+)
+
+FetchContent_MakeAvailable(fmt spdlog googletest entt)
