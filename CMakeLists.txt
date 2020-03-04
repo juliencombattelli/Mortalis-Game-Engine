@@ -11,3 +11,4 @@ endif()
 
 add_subdirectory(mge)
 add_subdirectory(gametest)
+add_subdirectory(sprite-test)
