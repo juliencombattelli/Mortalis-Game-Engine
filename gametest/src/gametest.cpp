@@ -31,16 +31,24 @@ using std::cerr;
 using std::cout;
 using std::endl;
 
-float r(int a, float b = 0)
+namespace math_constants {
+
+template <typename T>
+constexpr auto pi = static_cast<T>(3.14159265358979323846);
+
+} // namespace math_constants
+
+float r(int a, int b = 0)
 {
-    return static_cast<float>(std::rand() % (a * 1000) + b * 1000) / 1000.F;
+    const auto randf = static_cast<float>(std::rand() % (static_cast<int64_t>(a) * 1000));
+    return (randf + static_cast<float>(b) * 1000) / 1000.F;
 }
 
 struct Body {
-    Body(const sf::Vector2f& position, const sf::Vector2f& direction, float rotationd = 0.F)
-        : position(position)
-        , direction(direction)
-        , rotationd(rotationd)
+    Body(const sf::Vector2f& p, const sf::Vector2f& d, float rd = 0.F)
+        : position(p)
+        , direction(d)
+        , rotationd(rd)
         , alpha(0.F)
     {
     }
@@ -53,21 +61,21 @@ struct Body {
 using Renderable = std::shared_ptr<sf::Shape>;
 
 struct Particle {
-    explicit Particle(sf::Color colour, float radius, float duration)
-        : colour(colour)
-        , radius(radius)
-        , alpha(colour.a)
-        , d(colour.a / duration)
+    explicit Particle(sf::Color c, float r, float d)
+        : colour(c)
+        , radius(r)
+        , alpha(c.a)
+        , duration(c.a / d)
     {
     }
 
     sf::Color colour;
-    float radius, alpha, d;
+    float radius, alpha, duration;
 };
 
 struct Collideable {
-    explicit Collideable(float radius)
-        : radius(radius)
+    explicit Collideable(float r)
+        : radius(r)
     {
     }
 
@@ -76,9 +84,9 @@ struct Collideable {
 
 // Emitted when two entities collide.
 struct CollisionEvent {
-    CollisionEvent(entt::entity left, entt::entity right)
-        : left(left)
-        , right(right)
+    CollisionEvent(entt::entity l, entt::entity r)
+        : left(l)
+        , right(r)
     {
     }
 
@@ -87,13 +95,13 @@ struct CollisionEvent {
 
 class SpawnSystem {
 public:
-    explicit SpawnSystem(sf::RenderTarget& target, int count)
+    explicit SpawnSystem(sf::RenderTarget& target, int cnt)
         : size(target.getSize())
-        , count(count)
+        , count(cnt)
     {
     }
 
-    void update(entt::registry& registry, float dt)
+    void update(entt::registry& registry, float /*dt*/)
     {
         int c = 0;
         registry.view<Collideable>().each([&](auto&) { ++c; });
@@ -106,12 +114,16 @@ public:
 
             // "Physical" attributes.
             registry.assign<Body>(entity,
-                sf::Vector2f(r(size.x), r(size.y)),
+                sf::Vector2f(r(static_cast<int>(size.x)), r(static_cast<int>(size.y))),
                 sf::Vector2f(r(100, -50), r(100, -50)));
 
             // Shape to apply to entity.
             Renderable shape(new sf::CircleShape(collideable.radius));
-            shape->setFillColor(sf::Color(r(128, 127), r(128, 127), r(128, 127), 0));
+            shape->setFillColor(sf::Color(
+                static_cast<sf::Uint8>(r(128, 127)),
+                static_cast<sf::Uint8>(r(128, 127)),
+                static_cast<sf::Uint8>(r(128, 127)),
+                0));
             shape->setOrigin(collideable.radius, collideable.radius);
             registry.assign<Renderable>(entity, shape);
         }
@@ -143,12 +155,12 @@ public:
     {
     }
 
-    void update(entt::registry& registry, float dt)
+    void update(entt::registry& registry, float /*dt*/)
     {
         registry.view<Body>().each([this](auto& body) {
-            if (body.position.x + body.direction.x < 0 || body.position.x + body.direction.x >= size.x)
+            if (body.position.x + body.direction.x < 0 || body.position.x + body.direction.x >= static_cast<float>(size.x))
                 body.direction.x = -body.direction.x;
-            if (body.position.y + body.direction.y < 0 || body.position.y + body.direction.y >= size.y)
+            if (body.position.y + body.direction.y < 0 || body.position.y + body.direction.y >= static_cast<float>(size.y))
                 body.direction.y = -body.direction.y;
         });
     }
@@ -164,7 +176,7 @@ private:
 //
 // Uses a fairly rudimentary 2D partition system, but performs reasonably well.
 class CollisionSystem {
-    static const int PARTITIONS = 200;
+    static constexpr unsigned int PARTITIONS = 200;
 
     struct Candidate {
         sf::Vector2f position;
@@ -180,7 +192,7 @@ public:
         size.y = size.y / PARTITIONS + 1;
     }
 
-    void update(entt::registry& registry, entt::dispatcher& dispatcher, float dt)
+    void update(entt::registry& registry, entt::dispatcher& dispatcher, float /*dt*/)
     {
         reset();
         collect(registry);
@@ -202,10 +214,10 @@ private:
         registry.view<Body, Collideable>().each([this](auto entity, auto& body, auto& collideable) {
             unsigned int
                 left
-                = static_cast<int>(body.position.x - collideable.radius) / PARTITIONS,
-                top = static_cast<int>(body.position.y - collideable.radius) / PARTITIONS,
-                right = static_cast<int>(body.position.x + collideable.radius) / PARTITIONS,
-                bottom = static_cast<int>(body.position.y + collideable.radius) / PARTITIONS;
+                = static_cast<unsigned int>(body.position.x - collideable.radius) / PARTITIONS,
+                top = static_cast<unsigned int>(body.position.y - collideable.radius) / PARTITIONS,
+                right = static_cast<unsigned int>(body.position.x + collideable.radius) / PARTITIONS,
+                bottom = static_cast<unsigned int>(body.position.y + collideable.radius) / PARTITIONS;
             Candidate candidate { body.position, collideable.radius, entity };
             unsigned int slots[4] = {
                 left + top * size.x,
@@ -254,11 +266,11 @@ public:
     void update(entt::registry& registry, float dt)
     {
         registry.view<Particle>().each([&](auto entity, auto& particle) {
-            particle.alpha -= particle.d * dt;
+            particle.alpha -= particle.duration * dt;
             if (particle.alpha <= 0) {
                 registry.destroy(entity);
             } else {
-                particle.colour.a = particle.alpha;
+                particle.colour.a = static_cast<sf::Uint8>(particle.alpha);
             }
         });
     }
@@ -267,12 +279,12 @@ public:
 // Renders all explosion particles efficiently as a quad vertex array.
 class ParticleRenderSystem {
 public:
-    explicit ParticleRenderSystem(sf::RenderTarget& target)
-        : target(target)
+    explicit ParticleRenderSystem(sf::RenderTarget& t)
+        : target(t)
     {
     }
 
-    void update(entt::registry& registry, float dt)
+    void update(entt::registry& registry, float /*dt*/)
     {
         sf::VertexArray vertices(sf::Quads);
         registry.view<Particle, Body>().each([&vertices](auto& particle, auto& body) {
@@ -295,7 +307,7 @@ private:
 // For any two colliding bodies, destroys the bodies and emits a bunch of bodgy explosion particles.
 class ExplosionSystem {
 public:
-    void update(entt::registry& registry, float dt)
+    void update(entt::registry& registry, float /*dt*/)
     {
         for (auto entity : collided) {
             emit_particles(registry, entity);
@@ -313,19 +325,19 @@ public:
         sf::Color colour = renderable->getFillColor();
         colour.a = 200;
 
-        float area = (M_PI * collideable.radius * collideable.radius) / 3.0;
+        const auto area = static_cast<int>((math_constants::pi<float> * collideable.radius * collideable.radius) / 3.0F);
         for (int i = 0; i < area; i++) {
             float rotationd = r(720, 180);
             if (std::rand() % 2 == 0)
                 rotationd = -rotationd;
 
-            float offset = r(collideable.radius, 1);
-            float angle = r(360) * M_PI / 180.0;
+            const float offset = r(static_cast<int>(collideable.radius), 1);
+            const float angle = r(360) * math_constants::pi<float> / 180.0F;
 
             auto particle = registry.create();
             registry.assign<Body>(particle,
-                body.position + sf::Vector2f(offset * cos(angle), offset * sin(angle)),
-                body.direction + sf::Vector2f(offset * 2 * cos(angle), offset * 2 * sin(angle)),
+                body.position + sf::Vector2f(offset * cosf(angle), offset * sinf(angle)),
+                body.direction + sf::Vector2f(offset * 2 * cosf(angle), offset * 2 * sinf(angle)),
                 rotationd);
 
             float radius = r(3, 1);
@@ -348,13 +360,13 @@ private:
 // Render all Renderable entities and draw some informational text.
 class RenderSystem {
 public:
-    explicit RenderSystem(sf::RenderTarget& target, sf::Font& font)
-        : target(target)
+    explicit RenderSystem(sf::RenderTarget& t, sf::Font& font)
+        : target(t)
     {
         text.setFont(font);
         text.setPosition(sf::Vector2f(2, 2));
         text.setCharacterSize(18);
-        text.setColor(sf::Color::White);
+        text.setFillColor(sf::Color::White);
     }
 
     void update(entt::registry& registry, float dt)
@@ -369,20 +381,20 @@ public:
         });
         last_update += dt;
         frame_count++;
-        if (last_update >= 0.5) {
+        if (last_update >= 0.5F) {
             std::ostringstream out;
             const double fps = frame_count / last_update;
             out << registry.alive() << " entities (" << static_cast<int>(fps) << " fps)";
             text.setString(out.str());
-            last_update = 0.0;
-            frame_count = 0.0;
+            last_update = 0.0F;
+            frame_count = 0.0F;
         }
         target.draw(text);
     }
 
 private:
-    double last_update = 0.0;
-    double frame_count = 0.0;
+    float last_update = 0.0;
+    float frame_count = 0.0;
     sf::RenderTarget& target;
     sf::Text text;
 };
@@ -429,7 +441,7 @@ private:
 
 int main()
 {
-    std::srand(std::time(nullptr));
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "EntityX Example", sf::Style::Fullscreen);
     sf::Font font;
