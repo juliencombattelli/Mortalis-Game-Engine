@@ -14,10 +14,6 @@
 namespace mul {
 namespace sfe {
 
-struct Vector2i {
-    int x, y;
-};
-
 using MinitileArray = std::array<sf::IntRect, 4>;
 
 class AutotilerVXAce {
@@ -26,7 +22,7 @@ public:
     {
         std::array<sf::IntRect, 4> minitiles {};
 
-        for (int i = 0; i < 4; i++)
+        for (size_t i = 0; i < 4; i++)
             minitiles[i] = sf::IntRect {
                 (m_minitilesMaps[tileId][i] % 4) * 16 + autotileTopLeftCorner.x,
                 (m_minitilesMaps[tileId][i] / 4) * 16 + autotileTopLeftCorner.y,
@@ -92,12 +88,14 @@ private:
 std::array<sf::Sprite, 4> generateSprites(
     const sf::Texture& texture,
     const MinitileArray& minitiles,
-    Vector2i position)
+    sf::Vector2i position)
 {
     std::array<sf::Sprite, 4> sprites {};
-    for (int i = 0; i < 4; i++) {
+    for (size_t i = 0; i < 4; i++) {
         sprites[i] = sf::Sprite(texture, minitiles[i]);
-        sprites[i].setPosition(static_cast<float>(position.x + (i % 2) * 16), static_cast<float>(position.y + (i / 2) * 16));
+        const auto x = static_cast<float>(position.x + (static_cast<int>(i) % 2) * 16);
+        const auto y = static_cast<float>(position.y + (static_cast<int>(i) / 2) * 16);
+        sprites[i].setPosition(x, y);
     }
     return sprites;
 }
@@ -144,6 +142,7 @@ int main()
 
         window.clear();
         sf::Time elapsed = clock.restart();
+        (void)elapsed;
         for (auto s : autosprites)
             window.draw(s);
         window.display();
