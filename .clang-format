@@ -1,5 +1,6 @@
 BasedOnStyle: WebKit
+
+AlignTrailingComments: true
 AllowShortFunctionsOnASingleLine: None
 FixNamespaceComments: true
 NamespaceIndentation: None
-AlignTrailingComments: true
