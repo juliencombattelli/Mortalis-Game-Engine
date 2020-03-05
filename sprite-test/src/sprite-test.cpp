@@ -97,7 +97,7 @@ std::array<sf::Sprite, 4> generateSprites(
     std::array<sf::Sprite, 4> sprites {};
     for (int i = 0; i < 4; i++) {
         sprites[i] = sf::Sprite(texture, minitiles[i]);
-        sprites[i].setPosition(position.x + (i % 2) * 16, position.y + (i / 2) * 16);
+        sprites[i].setPosition(static_cast<float>(position.x + (i % 2) * 16), static_cast<float>(position.y + (i / 2) * 16));
     }
     return sprites;
 }

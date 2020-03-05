@@ -5,7 +5,8 @@
 
 function(set_project_warnings target_name)
     set(MSVC_WARNINGS
-        /permissive- # Disable permissive behavior
+        /FIciso646 # Force the inclusion of <ciso646> header for alternative
+                   # boolean operators (and, or, ...)
         /W4     # Baseline reasonable warnings
         /w14242 # 'identfier': conversion from 'type1' to 'type1', possible loss
                 # of data
