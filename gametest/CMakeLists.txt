@@ -7,3 +7,5 @@ target_link_libraries(gametest
         project_options # project_warnings
         CONAN_PKG::sfml CONAN_PKG::spdlog CONAN_PKG::entt
 )
+
+install(TARGETS gametest)
