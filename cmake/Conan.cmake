@@ -20,6 +20,8 @@ conan_cmake_run(
         gtest/1.10.0
         entt/3.3.1
         sfml/2.5.1@bincrafters/stable
+    OPTIONS
+        sfml:shared=True sfml:window=True sfml:graphics=True sfml:audio=False sfml:network=False
     BASIC_SETUP 
     CMAKE_TARGETS
     BUILD missing
