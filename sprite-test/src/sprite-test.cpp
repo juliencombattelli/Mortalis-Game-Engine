@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
+#include <array>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
