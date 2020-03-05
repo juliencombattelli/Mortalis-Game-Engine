@@ -1,1 +1,5 @@
-Checks: '*,-abseil*,-android*,-fuchsia*,-modernize-use-trailing-return-type*,-zircon*,-objc*,-mpi*,-openmp*'
+---
+Checks: '*,-abseil-*,-android-*,-fuchsia-*,-llvm-*,-modernize-use-trailing-return-type*,-zircon-*'
+WarningsAsErrors: '0'
+HeaderFilterRegex: ''
+FormatStyle:     none
