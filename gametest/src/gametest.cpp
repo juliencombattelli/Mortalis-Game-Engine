@@ -383,7 +383,7 @@ public:
         frame_count++;
         if (last_update >= 0.5F) {
             std::ostringstream out;
-            const double fps = frame_count / last_update;
+            const auto fps = frame_count / last_update;
             out << registry.alive() << " entities (" << static_cast<int>(fps) << " fps)";
             text.setString(out.str());
             last_update = 0.0F;
