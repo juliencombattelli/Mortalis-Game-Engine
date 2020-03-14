@@ -1,6 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
+#include <fmt/format.h>
+
 #include <array>
 #include <cmath>
 #include <cstdlib>
@@ -114,6 +116,7 @@ class Drawable {
 
 int main()
 {
+    /*
     sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "EntityX Example", sf::Style::Fullscreen);
 
     sf::Texture texture;
@@ -150,4 +153,29 @@ int main()
     }
 
     return sizeof(Drawable<sf::Quads>);
+    */
+
+    sf::Image world_A2;
+    if (not world_A2.loadFromFile("World_A2.png")) {
+        std::cerr << "Unable to open World_A2.png\n";
+    }
+
+    constexpr size_t autotile_count = 32;
+    constexpr size_t minitile_size = 16;
+    constexpr size_t tile_count = 48;
+    constexpr size_t tile_size = 32;
+
+    sf::Image output;
+    output.create(tile_count * tile_size, autotile_count * tile_size);
+
+    for (size_t autotile = 0; autotile < autotile_count; autotile++) {
+        for (size_t tile = 0; tile < tile_count; tile++) {
+            const auto minitile_rects = mul::sfe::AutotilerVXAce::generateTile(tile,
+                { (autotile % 8) * 2 * 32, (autotile / 8) * 3 * 32 });
+            for (size_t i = 0; i < 4; i++) {
+                output.copy(world_A2, tile * 32 + (i % 2) * 16, autotile * 32 + (i / 2) * 16, minitile_rects[i], true);
+            }
+        }
+    }
+    output.saveToFile("world_A2_unfolded.png");
 }
