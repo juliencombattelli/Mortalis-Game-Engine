@@ -38,5 +38,5 @@ if (ENABLE_TESTING)
 endif()
 
 add_subdirectory(mge)
-add_subdirectory(gametest)
-add_subdirectory(sprite-test)
+add_subdirectory(playground/entt-test)
+add_subdirectory(playground/sprite-test)
