@@ -1,0 +1,18 @@
+[requires]
+gtest/1.10.0
+spdlog/1.8.0
+entt/3.5.2
+sfml/2.5.1@bincrafters/stable
+
+[generators]
+cmake_find_package
+cmake_paths
+virtualenv
+
+[options]
+sfml:shared = True
+
+[imports]
+bin, *.dll -> ./bin
+lib, *.dylib* -> ./bin
+lib, *.so* -> ./bin

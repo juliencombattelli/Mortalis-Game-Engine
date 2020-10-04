@@ -110,10 +110,10 @@ public:
             auto entity = registry.create();
 
             // Mark as collideable (explosion particles will not be collideable).
-            auto collideable = registry.assign<Collideable>(entity, r(10, 5));
+            auto collideable = registry.emplace_or_replace<Collideable>(entity, r(10, 5));
 
             // "Physical" attributes.
-            registry.assign<Body>(entity,
+            registry.emplace_or_replace<Body>(entity,
                 sf::Vector2f(r(static_cast<int>(size.x)), r(static_cast<int>(size.y))),
                 sf::Vector2f(r(100, -50), r(100, -50)));
 
@@ -125,7 +125,7 @@ public:
                 static_cast<sf::Uint8>(r(128, 127)),
                 0));
             shape->setOrigin(collideable.radius, collideable.radius);
-            registry.assign<Renderable>(entity, shape);
+            registry.emplace_or_replace<Renderable>(entity, shape);
         }
     }
 
@@ -335,13 +335,13 @@ public:
             const float angle = r(360) * math_constants::pi<float> / 180.0F;
 
             auto particle = registry.create();
-            registry.assign<Body>(particle,
+            registry.emplace_or_replace<Body>(particle,
                 body.position + sf::Vector2f(offset * cosf(angle), offset * sinf(angle)),
                 body.direction + sf::Vector2f(offset * 2 * cosf(angle), offset * 2 * sinf(angle)),
                 rotationd);
 
             float radius = r(3, 1);
-            registry.assign<Particle>(particle, colour, radius, radius / 2);
+            registry.emplace_or_replace<Particle>(particle, colour, radius, radius / 2);
         }
     }
 

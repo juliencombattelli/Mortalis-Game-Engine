@@ -1,0 +1,6 @@
+{
+    "editor.detectIndentation": false,
+    "editor.formatOnSave": true,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true
+}

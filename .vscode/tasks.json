@@ -1,0 +1,32 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Configure",
+            "type": "shell",
+            "command": "cmake -S ${workspaceFolder} -B ${workspaceFolder}/build -DUSE_CONAN=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "command": "cmake --build . --config RelWithDebInfo",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Run test",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "command": "ctest",
+            "group": "build",
+            "problemMatcher": []
+        }
+    ]
+}

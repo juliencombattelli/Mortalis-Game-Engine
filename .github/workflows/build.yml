@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
 
   build:
-    
+
     strategy:
       fail-fast: false
       matrix:
@@ -32,25 +32,20 @@ jobs:
             compiler: gcc
             extra_cmake_args: -G "MSYS Makefiles"
         build_type: [Release, Debug]
-    
+
     name: ${{ matrix.config.name }} - ${{ matrix.build_type }}
     runs-on: ${{ matrix.config.os }}
-    
+
     steps:
-      
+
       - name: Checkout project
         uses: actions/checkout@v2
-      
+
       - name: Set up Python 3.x
         uses: actions/setup-python@v1
         with:
           python-version: "3.x"
-      
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install conan cmake
-      
+
       - name: Preconfigure
         shell: python
         run: |
@@ -64,20 +59,28 @@ jobs:
           else: # gcc
             print("::set-env name=CC::gcc")
             print("::set-env name=CXX::g++")
-      
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install conan cmake
+
       - name: Configure
-        run: cmake ${{ matrix.config.extra_cmake_args }} -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}      
-      
+        run: |
+          cmake ${{ matrix.config.extra_cmake_args }} -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DUSE_CONAN=ON
+
       - name: Build
-        run: cmake --build build --config ${{ matrix.build_type }}
-      
+        run: |
+          cmake --build build --config ${{ matrix.build_type }}
+
       - name: Run tests
         working-directory: build
         run: ctest
-      
+
       - name: Install Strip
-        run: cmake --install build --prefix instdir --strip
-      
+        run: |
+          cmake --install build --prefix instdir --strip
+
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
