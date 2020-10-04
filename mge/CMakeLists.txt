@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 project(mge)
 
 add_library(mge-ecs INTERFACE)
+target_project_warnings(mge-ecs)
+target_enable_sanitizers(mge-ecs)
 target_include_directories(mge-ecs INTERFACE include)
 
 if (ENABLE_TESTING)
