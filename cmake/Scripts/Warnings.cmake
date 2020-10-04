@@ -86,6 +86,13 @@ function(target_project_warnings TARGET_NAME)
         set(TARGET_WARNINGS ${GCC_WARNINGS})
     endif()
 
-    target_compile_options(${TARGET_NAME} INTERFACE ${TARGET_WARNINGS})
+    get_target_property(TARGET_TYPE ${TARGET_NAME} TYPE)
+    if(${TARGET_TYPE} STREQUAL INTERFACE_LIBRARY)
+        set(COMPILE_OPTIONS_SCOPE INTERFACE)
+    else()
+        set(COMPILE_OPTIONS_SCOPE PUBLIC)
+    endif()
+
+    target_compile_options(${TARGET_NAME} ${COMPILE_OPTIONS_SCOPE} ${TARGET_WARNINGS})
 
 endfunction()
