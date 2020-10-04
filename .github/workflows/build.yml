@@ -54,6 +54,7 @@ jobs:
       - name: Preconfigure
         shell: python
         run: |
+          print("::set-env name=CONAN_SYSREQUIRES_MODE::enabled")
           if "${{ matrix.config.compiler }}" == "cl":
             print("::set-env name=CC::cl")
             print("::set-env name=CXX::cl")
