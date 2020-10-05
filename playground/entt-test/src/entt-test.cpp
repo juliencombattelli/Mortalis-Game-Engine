@@ -212,14 +212,12 @@ private:
     void collect(entt::registry& registry)
     {
         registry.view<Body, Collideable>().each([this](auto entity, auto& body, auto& collideable) {
-            unsigned int
-                left
-                = static_cast<unsigned int>(body.position.x - collideable.radius) / PARTITIONS,
-                top = static_cast<unsigned int>(body.position.y - collideable.radius) / PARTITIONS,
-                right = static_cast<unsigned int>(body.position.x + collideable.radius) / PARTITIONS,
-                bottom = static_cast<unsigned int>(body.position.y + collideable.radius) / PARTITIONS;
+            size_t left = (body.position.x - collideable.radius) / PARTITIONS;
+            size_t top = (body.position.y - collideable.radius) / PARTITIONS;
+            size_t right = (body.position.x + collideable.radius) / PARTITIONS;
+            size_t bottom = (body.position.y + collideable.radius) / PARTITIONS;
             Candidate candidate { body.position, collideable.radius, entity };
-            unsigned int slots[4] = {
+            std::array slots {
                 left + top * size.x,
                 right + top * size.x,
                 left + bottom * size.x,
