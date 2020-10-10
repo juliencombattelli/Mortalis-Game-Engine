@@ -60,333 +60,69 @@ struct Body {
 
 using Renderable = std::shared_ptr<sf::Shape>;
 
-struct Particle {
-    explicit Particle(sf::Color c, float r, float d)
-        : colour(c)
-        , radius(r)
-        , alpha(c.a)
-        , duration(c.a / d)
-    {
-    }
-
-    sf::Color colour;
-    float radius, alpha, duration;
+struct Targetable {
+    std::function<void(int)> onTarget {};
 };
 
-struct Collideable {
-    explicit Collideable(float r)
-        : radius(r)
-    {
-    }
-
-    float radius;
+struct Clickable {
+    std::function<void(int)> onClick {};
 };
 
-// Emitted when two entities collide.
-struct CollisionEvent {
-    CollisionEvent(entt::entity l, entt::entity r)
-        : left(l)
-        , right(r)
-    {
-    }
-
-    entt::entity left, right;
-};
-
-class SpawnSystem {
+class PointerTargetSystem {
 public:
-    explicit SpawnSystem(sf::RenderTarget& target, int cnt)
-        : size(target.getSize())
-        , count(cnt)
-    {
-    }
-
-    void update(entt::registry& registry, float /*dt*/)
-    {
-        int c = 0;
-        registry.view<Collideable>().each([&](auto&) { ++c; });
-
-        for (int i = 0; i < count - c; i++) {
-            auto entity = registry.create();
-
-            // Mark as collideable (explosion particles will not be collideable).
-            auto collideable = registry.emplace_or_replace<Collideable>(entity, r(10, 5));
-
-            // "Physical" attributes.
-            registry.emplace_or_replace<Body>(entity,
-                sf::Vector2f(r(static_cast<int>(size.x)), r(static_cast<int>(size.y))),
-                sf::Vector2f(r(100, -50), r(100, -50)));
-
-            // Shape to apply to entity.
-            Renderable shape(new sf::CircleShape(collideable.radius));
-            shape->setFillColor(sf::Color(
-                static_cast<sf::Uint8>(r(128, 127)),
-                static_cast<sf::Uint8>(r(128, 127)),
-                static_cast<sf::Uint8>(r(128, 127)),
-                0));
-            shape->setOrigin(collideable.radius, collideable.radius);
-            registry.emplace_or_replace<Renderable>(entity, shape);
-        }
-    }
-
-private:
-    sf::Vector2u size;
-    int count;
-};
-
-// Updates a body's position and rotation.
-struct BodySystem {
-    void update(entt::registry& registry, float dt)
-    {
-        const float fdt = static_cast<float>(dt);
-        registry.view<Body>().each([fdt](auto& body) {
-            body.position += body.direction * fdt;
-            body.rotation += body.rotationd * fdt;
-            body.alpha = std::min(1.0f, body.alpha + fdt);
-        });
-    };
-};
-
-// Bounce bodies off the edge of the screen.
-class BounceSystem {
-public:
-    explicit BounceSystem(sf::RenderTarget& target)
-        : size(target.getSize())
-    {
-    }
-
-    void update(entt::registry& registry, float /*dt*/)
-    {
-        registry.view<Body>().each([this](auto& body) {
-            if (body.position.x + body.direction.x < 0 || body.position.x + body.direction.x >= static_cast<float>(size.x))
-                body.direction.x = -body.direction.x;
-            if (body.position.y + body.direction.y < 0 || body.position.y + body.direction.y >= static_cast<float>(size.y))
-                body.direction.y = -body.direction.y;
-        });
-    }
-
-private:
-    sf::Vector2u size;
-};
-
-// Determines if two Collideable bodies have collided. If they have it emits a
-// CollisionEvent. This is used by ExplosionSystem to create explosion
-// particles, but it could be used by a SoundSystem to play an explosion
-// sound, etc..
-//
-// Uses a fairly rudimentary 2D partition system, but performs reasonably well.
-class CollisionSystem {
-    static constexpr unsigned int PARTITIONS = 200;
-
-    struct Candidate {
-        sf::Vector2f position;
-        float radius;
-        entt::entity entity;
-    };
-
-public:
-    explicit CollisionSystem(sf::RenderTarget& target)
-        : size(target.getSize())
-    {
-        size.x = size.x / PARTITIONS + 1;
-        size.y = size.y / PARTITIONS + 1;
-    }
-
-    void update(entt::registry& registry, entt::dispatcher& dispatcher, float /*dt*/)
-    {
-        reset();
-        collect(registry);
-        collide(dispatcher);
-    };
-
-private:
-    std::vector<std::vector<Candidate>> grid;
-    sf::Vector2u size;
-
-    void reset()
-    {
-        grid.clear();
-        grid.resize(size.x * size.y);
-    }
-
-    void collect(entt::registry& registry)
-    {
-        registry.view<Body, Collideable>().each([this](auto entity, auto& body, auto& collideable) {
-            size_t left = (body.position.x - collideable.radius) / PARTITIONS;
-            size_t top = (body.position.y - collideable.radius) / PARTITIONS;
-            size_t right = (body.position.x + collideable.radius) / PARTITIONS;
-            size_t bottom = (body.position.y + collideable.radius) / PARTITIONS;
-            Candidate candidate { body.position, collideable.radius, entity };
-            std::array slots {
-                left + top * size.x,
-                right + top * size.x,
-                left + bottom * size.x,
-                right + bottom * size.x,
-            };
-            grid[slots[0]].push_back(candidate);
-            if (slots[0] != slots[1])
-                grid[slots[1]].push_back(candidate);
-            if (slots[1] != slots[2])
-                grid[slots[2]].push_back(candidate);
-            if (slots[2] != slots[3])
-                grid[slots[3]].push_back(candidate);
-        });
-    }
-
-    void collide(entt::dispatcher& dispatcher)
-    {
-        for (const std::vector<Candidate>& candidates : grid) {
-            for (const Candidate& left : candidates) {
-                for (const Candidate& right : candidates) {
-                    if (left.entity == right.entity)
-                        continue;
-                    if (collided(left, right))
-                        dispatcher.trigger<CollisionEvent>(left.entity, right.entity);
-                }
-            }
-        }
-    }
-
-    float length(const sf::Vector2f& v)
-    {
-        return std::sqrt(v.x * v.x + v.y * v.y);
-    }
-
-    bool collided(const Candidate& left, const Candidate& right)
-    {
-        return length(left.position - right.position) < left.radius + right.radius;
-    }
-};
-
-// Fade out and then remove particles.
-class ParticleSystem {
-public:
-    void update(entt::registry& registry, float dt)
-    {
-        registry.view<Particle>().each([&](auto entity, auto& particle) {
-            particle.alpha -= particle.duration * dt;
-            if (particle.alpha <= 0) {
-                registry.destroy(entity);
-            } else {
-                particle.colour.a = static_cast<sf::Uint8>(particle.alpha);
-            }
-        });
-    }
-};
-
-// Renders all explosion particles efficiently as a quad vertex array.
-class ParticleRenderSystem {
-public:
-    explicit ParticleRenderSystem(sf::RenderTarget& t)
+    explicit PointerTargetSystem(sf::RenderWindow& t)
         : target(t)
     {
     }
 
     void update(entt::registry& registry, float /*dt*/)
     {
-        sf::VertexArray vertices(sf::Quads);
-        registry.view<Particle, Body>().each([&vertices](auto& particle, auto& body) {
-            const float r = particle.radius;
-            // Spin the particles.
-            sf::Transform transform;
-            transform.rotate(body.rotation);
-            vertices.append(sf::Vertex(body.position + transform.transformPoint(sf::Vector2f(-r, -r)), particle.colour));
-            vertices.append(sf::Vertex(body.position + transform.transformPoint(sf::Vector2f(r, -r)), particle.colour));
-            vertices.append(sf::Vertex(body.position + transform.transformPoint(sf::Vector2f(r, r)), particle.colour));
-            vertices.append(sf::Vertex(body.position + transform.transformPoint(sf::Vector2f(-r, r)), particle.colour));
-        });
-        target.draw(vertices);
-    }
-
-private:
-    sf::RenderTarget& target;
-};
-
-// For any two colliding bodies, destroys the bodies and emits a bunch of bodgy explosion particles.
-class ExplosionSystem {
-public:
-    void update(entt::registry& registry, float /*dt*/)
-    {
-        for (auto entity : collided) {
-            emit_particles(registry, entity);
-            registry.destroy(entity);
-        }
-        collided.clear();
-    }
-
-    void emit_particles(entt::registry& registry, entt::entity entity)
-    {
-        const auto body = registry.get<Body>(entity);
-        const auto renderable = registry.get<Renderable>(entity);
-        const auto collideable = registry.get<Collideable>(entity);
-
-        sf::Color colour = renderable->getFillColor();
-        colour.a = 200;
-
-        const auto area = static_cast<int>((math_constants::pi<float> * collideable.radius * collideable.radius) / 3.0F);
-        for (int i = 0; i < area; i++) {
-            float rotationd = r(720, 180);
-            if (std::rand() % 2 == 0)
-                rotationd = -rotationd;
-
-            const float offset = r(static_cast<int>(collideable.radius), 1);
-            const float angle = r(360) * math_constants::pi<float> / 180.0F;
-
-            auto particle = registry.create();
-            registry.emplace_or_replace<Body>(particle,
-                body.position + sf::Vector2f(offset * cosf(angle), offset * sinf(angle)),
-                body.direction + sf::Vector2f(offset * 2 * cosf(angle), offset * 2 * sinf(angle)),
-                rotationd);
-
-            float radius = r(3, 1);
-            registry.emplace_or_replace<Particle>(particle, colour, radius, radius / 2);
-        }
-    }
-
-    void receive(const CollisionEvent& collision)
-    {
-        // Events are immutable, so we can't destroy the entities here. We defer
-        // the work until the update loop.
-        collided.insert(collision.left);
-        collided.insert(collision.right);
-    }
-
-private:
-    std::unordered_set<entt::entity> collided;
-};
-
-struct Bounds {
-    sf::Vector2u position;
-    sf::Vector2u size;
-};
-
-struct Targetable {
-};
-
-struct Clickable {
-};
-
-class PointerTargetSystem {
-public:
-    void update(entt::registry& registry, float /*dt*/)
-    {
-        static int i = 0;
-
-        const auto pointer = static_cast<sf::Vector2f>(sf::Mouse::getPosition());
+        const auto pointer = static_cast<sf::Vector2f>(sf::Mouse::getPosition(target));
 
         registry.view<Targetable, Body>().each([&](auto& targetable, auto& body) {
-            const auto bounds = sf::FloatRect { body.position, body.direction };
-            if (bounds.contains(pointer)) {
-                std::cout << "[" << i++ << "] targetable!\n";
+            const auto body_bounds = sf::FloatRect { body.position, body.direction };
+            if (body_bounds.contains(pointer)) {
+                if (targetable.onTarget) {
+                    targetable.onTarget(1);
+                }
             }
         });
     }
+
+private:
+    sf::RenderWindow& target;
+};
+
+class PointerClickSystem {
+public:
+    explicit PointerClickSystem(sf::RenderWindow& t)
+        : target(t)
+    {
+    }
+
+    void update(entt::registry& registry, float /*dt*/)
+    {
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            const auto pointer = static_cast<sf::Vector2f>(sf::Mouse::getPosition(target));
+            registry.view<Clickable, Body>().each([&](auto& clickable, auto& body) {
+                const auto body_bounds = sf::FloatRect { body.position, body.direction };
+                if (body_bounds.contains(pointer)) {
+                    if (clickable.onClick) {
+                        clickable.onClick(1);
+                    }
+                }
+            });
+        }
+    }
+
+private:
+    sf::RenderWindow& target;
 };
 
 // Render all Renderable entities and draw some informational text.
 class RenderSystem {
 public:
-    explicit RenderSystem(sf::RenderTarget& t, sf::Font& font)
+    explicit RenderSystem(sf::RenderWindow& t, sf::Font& font)
         : target(t)
     {
         text.setFont(font);
@@ -421,32 +157,35 @@ public:
 private:
     float last_update = 0.0;
     float frame_count = 0.0;
-    sf::RenderTarget& target;
+    sf::RenderWindow& target;
     sf::Text text;
 };
 
 class Application {
 public:
-    explicit Application(sf::RenderTarget& target, sf::Font& font)
-        : // m_spawnSystem(target, 250)
-          // , m_bounceSystem(target)
-          // , m_collisionSystem(target)
-        /*,*/ m_renderSystem(target, font)
-    // , m_particleRenderSystem(target)
+    explicit Application(sf::RenderWindow& target, sf::Font& font)
+        : m_renderSystem(target, font)
+        , m_pointerTargetSystem(target)
+        , m_pointerClickSystem(target)
     {
-        // m_dispatcher.sink<CollisionEvent>().connect<&ExplosionSystem::receive>(m_explosionSystem);
-
         auto entity = m_registry.create();
+
         auto& body = m_registry.emplace_or_replace<Body>(entity, sf::Vector2f(100, 100), sf::Vector2f(80, 40));
 
-        m_registry.emplace_or_replace<Targetable>(entity);
+        m_registry.emplace_or_replace<Targetable>(entity, [](int id) {
+            std::cout << "entity #" << id << " targeted\n";
+        });
+
+        m_registry.emplace_or_replace<Clickable>(entity, [](int id) {
+            std::cout << "entity #" << id << " clicked\n";
+        });
+
         Renderable shape(new sf::RectangleShape({ body.direction.x, body.direction.y }));
         shape->setFillColor(sf::Color(
             static_cast<sf::Uint8>(r(128, 127)),
             static_cast<sf::Uint8>(r(128, 127)),
             static_cast<sf::Uint8>(r(128, 127)),
             255));
-        //shape->setOrigin(body.position.x, body.position.y);
         m_registry.emplace_or_replace<Renderable>(entity, shape);
     }
 
@@ -455,36 +194,25 @@ public:
         m_dispatcher.update();
 
         m_pointerTargetSystem.update(m_registry, dt);
-        // m_spawnSystem.update(m_registry, dt);
-        // m_bodySystem.update(m_registry, dt);
-        // m_bounceSystem.update(m_registry, dt);
-        // m_collisionSystem.update(m_registry, m_dispatcher, dt);
-        // m_explosionSystem.update(m_registry, dt);
-        // m_particleSystem.update(m_registry, dt);
+        m_pointerClickSystem.update(m_registry, dt);
         m_renderSystem.update(m_registry, dt);
-        // m_particleRenderSystem.update(m_registry, dt);
     }
 
 private:
     entt::registry m_registry;
     entt::dispatcher m_dispatcher {};
 
-    // SpawnSystem m_spawnSystem;
-    // BodySystem m_bodySystem;
-    // BounceSystem m_bounceSystem;
-    // CollisionSystem m_collisionSystem;
-    // ExplosionSystem m_explosionSystem;
-    // ParticleSystem m_particleSystem;
     RenderSystem m_renderSystem;
     PointerTargetSystem m_pointerTargetSystem;
-    // ParticleRenderSystem m_particleRenderSystem;
+    PointerClickSystem m_pointerClickSystem;
 };
 
 int main()
 {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "EntityX Example", sf::Style::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode { 800, 600 }, "EnTT Example" /*, sf::Style::Fullscreen*/);
+    window.setVerticalSyncEnabled(true);
     sf::Font font;
     if (!font.loadFromFile("LiberationSans-Regular.ttf")) {
         cerr << "error: failed to load LiberationSans-Regular.ttf" << endl;
