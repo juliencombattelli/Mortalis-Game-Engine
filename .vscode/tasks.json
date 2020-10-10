@@ -27,6 +27,16 @@
             "command": "ctest",
             "group": "build",
             "problemMatcher": []
+        },
+        {
+            "label": "Run entt-test",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/playground/entt-test/res"
+            },
+            "command": "../../../build/bin/entt-test",
+            "group": "build",
+            "problemMatcher": []
         }
     ]
 }

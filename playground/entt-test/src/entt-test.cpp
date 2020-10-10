@@ -49,7 +49,7 @@ struct Body {
         : position(p)
         , direction(d)
         , rotationd(rd)
-        , alpha(0.F)
+        , alpha(1.F)
     {
     }
 
@@ -355,6 +355,34 @@ private:
     std::unordered_set<entt::entity> collided;
 };
 
+struct Bounds {
+    sf::Vector2u position;
+    sf::Vector2u size;
+};
+
+struct Targetable {
+};
+
+struct Clickable {
+};
+
+class PointerTargetSystem {
+public:
+    void update(entt::registry& registry, float /*dt*/)
+    {
+        static int i = 0;
+
+        const auto pointer = static_cast<sf::Vector2f>(sf::Mouse::getPosition());
+
+        registry.view<Targetable, Body>().each([&](auto& targetable, auto& body) {
+            const auto bounds = sf::FloatRect { body.position, body.direction };
+            if (bounds.contains(pointer)) {
+                std::cout << "[" << i++ << "] targetable!\n";
+            }
+        });
+    }
+};
+
 // Render all Renderable entities and draw some informational text.
 class RenderSystem {
 public:
@@ -400,41 +428,56 @@ private:
 class Application {
 public:
     explicit Application(sf::RenderTarget& target, sf::Font& font)
-        : m_spawnSystem(target, 250)
-        , m_bounceSystem(target)
-        , m_collisionSystem(target)
-        , m_renderSystem(target, font)
-        , m_particleRenderSystem(target)
+        : // m_spawnSystem(target, 250)
+          // , m_bounceSystem(target)
+          // , m_collisionSystem(target)
+        /*,*/ m_renderSystem(target, font)
+    // , m_particleRenderSystem(target)
     {
-        m_dispatcher.sink<CollisionEvent>().connect<&ExplosionSystem::receive>(m_explosionSystem);
+        // m_dispatcher.sink<CollisionEvent>().connect<&ExplosionSystem::receive>(m_explosionSystem);
+
+        auto entity = m_registry.create();
+        auto& body = m_registry.emplace_or_replace<Body>(entity, sf::Vector2f(100, 100), sf::Vector2f(80, 40));
+
+        m_registry.emplace_or_replace<Targetable>(entity);
+        Renderable shape(new sf::RectangleShape({ body.direction.x, body.direction.y }));
+        shape->setFillColor(sf::Color(
+            static_cast<sf::Uint8>(r(128, 127)),
+            static_cast<sf::Uint8>(r(128, 127)),
+            static_cast<sf::Uint8>(r(128, 127)),
+            255));
+        //shape->setOrigin(body.position.x, body.position.y);
+        m_registry.emplace_or_replace<Renderable>(entity, shape);
     }
 
     void update(float dt)
     {
         m_dispatcher.update();
 
-        m_spawnSystem.update(m_registry, dt);
-        m_bodySystem.update(m_registry, dt);
-        m_bounceSystem.update(m_registry, dt);
-        m_collisionSystem.update(m_registry, m_dispatcher, dt);
-        m_explosionSystem.update(m_registry, dt);
-        m_particleSystem.update(m_registry, dt);
+        m_pointerTargetSystem.update(m_registry, dt);
+        // m_spawnSystem.update(m_registry, dt);
+        // m_bodySystem.update(m_registry, dt);
+        // m_bounceSystem.update(m_registry, dt);
+        // m_collisionSystem.update(m_registry, m_dispatcher, dt);
+        // m_explosionSystem.update(m_registry, dt);
+        // m_particleSystem.update(m_registry, dt);
         m_renderSystem.update(m_registry, dt);
-        m_particleRenderSystem.update(m_registry, dt);
+        // m_particleRenderSystem.update(m_registry, dt);
     }
 
 private:
     entt::registry m_registry;
     entt::dispatcher m_dispatcher {};
 
-    SpawnSystem m_spawnSystem;
-    BodySystem m_bodySystem;
-    BounceSystem m_bounceSystem;
-    CollisionSystem m_collisionSystem;
-    ExplosionSystem m_explosionSystem;
-    ParticleSystem m_particleSystem;
+    // SpawnSystem m_spawnSystem;
+    // BodySystem m_bodySystem;
+    // BounceSystem m_bounceSystem;
+    // CollisionSystem m_collisionSystem;
+    // ExplosionSystem m_explosionSystem;
+    // ParticleSystem m_particleSystem;
     RenderSystem m_renderSystem;
-    ParticleRenderSystem m_particleRenderSystem;
+    PointerTargetSystem m_pointerTargetSystem;
+    // ParticleRenderSystem m_particleRenderSystem;
 };
 
 int main()
