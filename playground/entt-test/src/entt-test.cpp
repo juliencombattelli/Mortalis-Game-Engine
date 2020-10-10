@@ -161,6 +161,63 @@ private:
     sf::Text text;
 };
 
+namespace mge::util {
+
+template <typename T, typename... Args>
+void ignore_unused(T&& t, Args&&... args)
+{
+    static_cast<void>(t);
+    if constexpr (sizeof...(args) > 0) {
+        ignore_unused(args...);
+    }
+}
+
+} // namespace mge::util
+
+namespace mge::gui::factory {
+
+// Abstaction used only for widget creation.
+// Manipulation at runtime must be done with the systems.
+
+template <typename TWidget>
+TWidget create(entt::registry& registry)
+{
+    return TWidget(registry);
+}
+
+class widget {
+    widget(entt::registry& registry)
+        : m_registry { registry }
+        , m_entity { m_registry.create() }
+    {
+        m_registry.emplace<Body>(m_entity, sf::Vector2f {}, sf::Vector2f {});
+        m_registry.emplace<Targetable>(m_entity);
+        m_registry.emplace<Clickable>(m_entity);
+    }
+
+    void set_position(sf::Vector2f pos)
+    {
+        auto body = m_registry.get<Body>(m_entity);
+        body.position = pos;
+    }
+
+    void set_size(sf::Vector2f size)
+    {
+        auto body = m_registry.get<Body>(m_entity);
+        body.direction = size;
+    }
+
+private:
+    entt::registry& m_registry;
+    const entt::entity m_entity;
+};
+
+struct button : public widget {
+    using widget::widget;
+};
+
+} // namespace mge::gui::factory
+
 class Application {
 public:
     explicit Application(sf::RenderWindow& target, sf::Font& font)
